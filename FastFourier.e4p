@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project FastFourier -->
-<!-- Saved: 2018-07-29, 14:31:43 -->
+<!-- Saved: 2018-07-29, 19:47:35 -->
 <!-- Copyright (C) 2018 ,  -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -27,6 +27,9 @@
     <Source>core/mainwindow.py</Source>
     <Source>core/merge_plot.py</Source>
     <Source>core/rpsymbolic/dialogBlock.py</Source>
+    <Source>core/serial/Ui_serialUI.py</Source>
+    <Source>core/serial/serialUI.py</Source>
+    <Source>core/serial/serialport.py</Source>
     <Source>core/symbolic.py</Source>
     <Source>core/table_selector.py</Source>
     <Source>core/text_editor.py</Source>
@@ -34,10 +37,11 @@
     <Source>launcher.py</Source>
   </Sources>
   <Forms>
-    <Form>core/merge_plot.ui</Form>
     <Form>core/cont2discdlg.ui</Form>
     <Form>core/filter.ui</Form>
     <Form>core/mainwindow.ui</Form>
+    <Form>core/merge_plot.ui</Form>
+    <Form>core/serial/serialUI.ui</Form>
     <Form>core/symbolic.ui</Form>
     <Form>core/table_selector.ui</Form>
   </Forms>
@@ -46,7 +50,107 @@
   </Resources>
   <MainScript>launcher.py</MainScript>
   <Vcs>
-    <VcsType>None</VcsType>
+    <VcsType>Git</VcsType>
+    <VcsOptions>
+      <dict>
+        <key>
+          <string>add</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>checkout</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>commit</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>diff</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>export</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>global</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>history</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>log</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>remove</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>status</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>tag</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+        <key>
+          <string>update</string>
+        </key>
+        <value>
+          <list>
+            <string></string>
+          </list>
+        </value>
+      </dict>
+    </VcsOptions>
   </Vcs>
   <FiletypeAssociations>
     <FiletypeAssociation pattern="*.e4p" type="OTHERS"/>

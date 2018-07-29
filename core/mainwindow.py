@@ -30,6 +30,7 @@ from .table_selector import Dialog
 from .Ui_mainwindow import Ui_MainWindow
 from .filter import FiterDialog
 from core.symbolic import SymbolicBlock
+from core.serial.serialUI import serialDlg
 import numpy as np
 
 
@@ -193,3 +194,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             view.m_chart.addSeries(spline)
         self.on_tabWidget_tabCloseRequested(tabcunt)
         mer.close()
+    
+    @pyqtSlot()
+    def on_serial_btn_clicked(self):
+        dlg = serialDlg()
+        dlg.show()
+        if not dlg.exec_():
+            return

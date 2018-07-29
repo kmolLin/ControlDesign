@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'D:\kmol\fft_project\core\mainwindow.ui'
+# Form implementation generated from reading ui file 'D:\kmol\ControlDesign\core\mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.10.1
 #
@@ -39,6 +39,9 @@ class Ui_MainWindow(object):
         self.merge_btn = QtWidgets.QPushButton(self.layoutWidget)
         self.merge_btn.setObjectName("merge_btn")
         self.horizontalLayout_2.addWidget(self.merge_btn)
+        self.serial_btn = QtWidgets.QPushButton(self.layoutWidget)
+        self.serial_btn.setObjectName("serial_btn")
+        self.horizontalLayout_2.addWidget(self.serial_btn)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_2.addItem(spacerItem)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
@@ -88,6 +91,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.editor_btn.setText(_translate("MainWindow", "Tool editor"))
         self.merge_btn.setText(_translate("MainWindow", "Merge Plot"))
+        self.serial_btn.setText(_translate("MainWindow", "Serial port"))
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuFiliter.setTitle(_translate("MainWindow", "Filiter"))
