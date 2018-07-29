@@ -26,7 +26,6 @@ class serialDlg(QDialog, Ui_serialDlg):
         self.serialport = QSerialPort(self)
         self.serialport.readyRead.connect(self.readData)
 
-    
     def initForms(self):
         
         if platform.system() == "Windows":
