@@ -1,0 +1,10 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+<qresource>
+    <file>core/icons/open-icon.png</file>
+    <file>core/icons/save-icon.png</file>
+    <file>core/icons/Settings-icon.png</file>
+    <file>core/icons/Button-Next-icon.png</file>
+    <file>core/icons/Actions-process-stop-icon.png</file>
+</qresource>
+</RCC>
