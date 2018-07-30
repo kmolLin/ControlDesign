@@ -4,17 +4,21 @@
 Module implementing serialDlg.
 """
 
-from PyQt5.QtCore import pyqtSlot, QIODevice
+from PyQt5.QtCore import pyqtSlot, QIODevice, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QMessageBox
 from PyQt5.QtSerialPort import QSerialPort
 from PyQt5.QtGui import QTextCursor
 import platform
 from .Ui_serialUI import Ui_serialDlg
+from xlrd import open_workbook
 
 
 class serialDlg(QDialog, Ui_serialDlg):
+    
+    receive_signal = pyqtSignal(float)
     """
     Class documentation goes here.
+    self.receive_signal.emit(float)
     """
     def __init__(self, parent=None):
         """
@@ -25,6 +29,8 @@ class serialDlg(QDialog, Ui_serialDlg):
         self.initForms()
         self.serialport = QSerialPort(self)
         self.serialport.readyRead.connect(self.readData)
+        self.count = 0
+        self.ccun = 0
 
     def initForms(self):
         
@@ -62,10 +68,22 @@ class serialDlg(QDialog, Ui_serialDlg):
         
     def readData(self):
         if self.serialport.canReadLine():
-            data = self.serialport.readAll()
+            data = self.serialport.readLine()
             self.textEditReceived.insertPlainText(data.data().decode())
             self.textEditReceived.moveCursor(QTextCursor.End)
-    
+            thistmp = int(data.data().decode())
+            self.receive_signal.emit(((abs((thistmp-self.count))%500)*0.72)/0.01)
+            self.count = thistmp
+            try:
+                self.testfunction(self.ccun)
+                self.ccun += 1
+            except:
+                pass
+    def testfunction(self, count):
+        
+        byt = str(self.sig[count]).encode("utf-8")
+        self.writeData(byt)
+
     @pyqtSlot()
     def on_pushButtonOpenSerial_clicked(self):
         if self.serialport.isOpen():
@@ -86,3 +104,13 @@ class serialDlg(QDialog, Ui_serialDlg):
         data = self.textEditSent.toPlainText()
         byt = data.encode("utf-8")
         self.writeData(byt)
+    
+    @pyqtSlot()
+    def on_testbtn_clicked(self):
+        self.sig = []
+        wb = open_workbook('D:\kmol\ControlDesign\example\motor_data\customsig.xlsx')
+        table = wb.sheet_by_index(0)
+        for row in range(table.nrows):
+            for col in range(table.ncols):
+                self.sig.append(table.cell(row,col).value)
+        

@@ -20,6 +20,7 @@ from .Ui_table_selector import Ui_Dialog
 from xlrd import open_workbook
 
 class Dialog(QDialog, Ui_Dialog):
+    
     """
     Class documentation goes here.
     """

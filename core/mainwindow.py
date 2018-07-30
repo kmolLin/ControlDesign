@@ -62,7 +62,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.toolBar.addAction(QIcon(QPixmap(':/core/icons/Settings-icon.png')), "Setting")
         self.toolBar.addAction(QIcon(QPixmap(':/core/icons/Actions-process-stop-icon.png')), "Stop")
     
-    
     def addChartFromXY(self, title: str, x, y):
         axisX = QValueAxis()
         axisY = QValueAxis()
@@ -197,7 +196,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     @pyqtSlot()
     def on_serial_btn_clicked(self):
+        title = "serial"
+        axisX = QValueAxis()
+        axisY = QValueAxis()
+        chart = DataChart(title, axisX, axisY)
+        chart.setTheme(QChart.ChartThemeBlueNcs)
+        line = QSplineSeries()
+        line.setName("serial")
+        chart.addSeries(line)
+        line.attachAxis(axisX)
+        line.attachAxis(axisY)
+        self.view = QView()
+        #self.view.combinedata(y)
+        self.view.addQchart(chart)
+        self.tabWidget.addTab(self.view, title)
+        self.tabcount.append([title, self.view])
+        
+        def addline(y:float):
+            print(line.count()*0.1, y)
+            line.append(line.count(), y)
+        
         dlg = serialDlg()
+        dlg.receive_signal.connect(addline)
         dlg.show()
         if not dlg.exec_():
             return

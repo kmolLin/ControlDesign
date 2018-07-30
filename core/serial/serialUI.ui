@@ -48,21 +48,6 @@
         <item row="0" column="1">
          <widget class="QComboBox" name="comboBoxPort"/>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label">
-          <property name="font">
-           <font>
-            <pointsize>14</pointsize>
-           </font>
-          </property>
-          <property name="text">
-           <string>baurd</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="1">
          <widget class="QComboBox" name="comboBoxBaud"/>
         </item>
@@ -81,8 +66,23 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QComboBox" name="comboBoxCheckSum"/>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label">
+          <property name="font">
+           <font>
+            <pointsize>14</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>baurd</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QComboBox" name="comboBoxStopBits"/>
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label_4">
@@ -98,6 +98,9 @@
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="comboBoxCheckSum"/>
         </item>
         <item row="3" column="1">
          <widget class="QComboBox" name="comboBoxBits"/>
@@ -116,9 +119,6 @@
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QComboBox" name="comboBoxStopBits"/>
         </item>
         <item row="5" column="0" colspan="2">
          <widget class="QPushButton" name="pushButtonOpenSerial">
@@ -173,6 +173,13 @@
        </property>
        <property name="readOnly">
         <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="testbtn">
+       <property name="text">
+        <string>PushButton</string>
        </property>
       </widget>
      </item>
