@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Tasks SYSTEM "Tasks-6.0.dtd">
 <!-- eric6 tasks file for project FastFourier -->
-<!-- Saved: 2018-07-30, 15:59:41 -->
+<!-- Saved: 2018-08-22, 18:36:14 -->
 <Tasks version="6.0">
   <ProjectScanFilter></ProjectScanFilter>
-  <Task priority="1" completed="False" type="1" uid="{8f8215f0-121a-473f-9e50-9634602e3c05}">
+  <Task priority="1" completed="False" type="1" uid="{be50ebf9-246d-4350-b902-a3e15562581b}">
     <Summary>TODO: add save image files not on clickboard</Summary>
     <Description></Description>
-    <Created>2018-07-30, 15:59:38</Created>
+    <Created>2018-08-17, 12:30:27</Created>
     <Resource>
       <Filename>core/mainwindow.py</Filename>
       <Linenumber>174</Linenumber>

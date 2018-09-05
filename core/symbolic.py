@@ -65,7 +65,6 @@ class SymbolicBlock(QWidget, Ui_Dialog):
             answer = self.getanswer
             model = self.modelname
             exec(script)
-        
         from threading import Thread
         Thread(target=run).start()
     

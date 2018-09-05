@@ -74,15 +74,6 @@ class serialDlg(QDialog, Ui_serialDlg):
             thistmp = int(data.data().decode())
             self.receive_signal.emit(((abs((thistmp-self.count))%500)*0.72)/0.01)
             self.count = thistmp
-            try:
-                self.testfunction(self.ccun)
-                self.ccun += 1
-            except:
-                pass
-    def testfunction(self, count):
-        
-        byt = str(self.sig[count]).encode("utf-8")
-        self.writeData(byt)
 
     @pyqtSlot()
     def on_pushButtonOpenSerial_clicked(self):
