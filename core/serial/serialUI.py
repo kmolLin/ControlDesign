@@ -65,6 +65,14 @@ class serialDlg(QDialog, Ui_serialDlg):
     
     def writeData(self, data):
         self.serialport.write(data)
+
+    def __scanSerialPorts__(self):
+        ports = []
+        for i in range(32):
+            ports.append("/dev/ttyS%d" % i)
+        for i in range(32):
+            ports.append("/dev/ttyACM%d" % i)
+        self.comboBoxPort.addItems(ports)
         
     def readData(self):
         if self.serialport.canReadLine():
