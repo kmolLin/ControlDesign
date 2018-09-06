@@ -31,9 +31,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         #layout.addWidget(dynamic_canvas)
         #self.addToolBar(QtCore.Qt.BottomToolBarArea,
         #                NavigationToolbar(dynamic_canvas, self))
-
-
-
         #self._dynamic_ax = dynamic_canvas.figure.subplots()
         #self._timer = dynamic_canvas.new_timer(
         #    100, [(self._update_canvas, (), {})])

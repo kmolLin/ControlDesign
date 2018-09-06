@@ -37,7 +37,7 @@ import sys
 import time
 
 import numpy as np
-
+from scipy import signal
 from matplotlib.backends.qt_compat import QtCore, QtWidgets, is_pyqt5
 if is_pyqt5():
     from matplotlib.backends.backend_qt5agg import (
@@ -77,21 +77,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.toolBar.addAction(QIcon(QPixmap(':/core/icons/save-icon.png')), "Savefile")
         self.toolBar.addAction(QIcon(QPixmap(':/core/icons/Settings-icon.png')), "Setting")
         self.toolBar.addAction(QIcon(QPixmap(':/core/icons/Actions-process-stop-icon.png')), "Stop")
-
-    # def on_actionBode_triggered(self):
-    #
-    #     #self._main = QtWidgets.QWidget()
-    #     #self.setCentralWidget(self._main)
-    #     layout = QtWidgets.QVBoxLayout()
-    #     static_canvas = FigureCanvas(Figure(figsize=(5, 3)))
-    #     #layout.addWidget(static_canvas)
-    #     #self.addToolBar(NavigationToolbar(static_canvas, self))
-    #     self._static_ax = static_canvas.figure.subplots()
-    #     t = np.linspace(0, 10, 501)
-    #     self._static_ax.plot(t, np.tan(t), ".")
-    #     #self.qwi = QWidget()
-    #     #qwi.setlayout(layout)
-    #     self.tabWidget.addTab(self._static_ax, "ttt")
 
     def _update_canvas(self):
         self._dynamic_ax.clear()
@@ -259,3 +244,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         dlg.show()
         if not dlg.exec_():
             return
+    
+    @pyqtSlot()
+    def on_actionBode_triggered(self):
+        
+        s1 = signal.lti([1], [1, 1])
+        w, mag, phase = signal.bode(s1)
+        
+        wi = QWidget(self)
+        layout = QtWidgets.QVBoxLayout(wi)
+        dbplotWidget = FigureCanvas(Figure(figsize=(5, 3)))
+        dbplot = dbplotWidget.figure.subplots()
+        dbplot.set_title("Bode Diagram")
+        dbplot.set_ylabel("Magnitude(dB)")
+        dbplot.semilogx(w, mag)
+        layout.addWidget(dbplotWidget)
+        phaseWidget = FigureCanvas(Figure(figsize=(5, 3)))
+        phplot = phaseWidget.figure.subplots()
+        phplot.set_ylabel("Phase(deg)")
+        phplot.set_xlabel("Frequency (rad/sec)")
+        phplot.semilogx(w, phase)
+        layout.addWidget(phaseWidget)
+        self.tabWidget.addTab(wi, "Bode")
