@@ -78,20 +78,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.toolBar.addAction(QIcon(QPixmap(':/core/icons/Settings-icon.png')), "Setting")
         self.toolBar.addAction(QIcon(QPixmap(':/core/icons/Actions-process-stop-icon.png')), "Stop")
 
-    def on_actionBode_triggered(self):
-
-        #self._main = QtWidgets.QWidget()
-        #self.setCentralWidget(self._main)
-        layout = QtWidgets.QVBoxLayout()
-        static_canvas = FigureCanvas(Figure(figsize=(5, 3)))
-        layout.addWidget(static_canvas)
-        #self.addToolBar(NavigationToolbar(static_canvas, self))
-        self._static_ax = static_canvas.figure.subplots()
-        t = np.linspace(0, 10, 501)
-        self._static_ax.plot(t, np.tan(t), ".")
-        qwi = QWidget()
-        qwi.setlayout(layout)
-        self.tabWidget.addTab(qwi, "ttt")
+    # def on_actionBode_triggered(self):
+    #
+    #     #self._main = QtWidgets.QWidget()
+    #     #self.setCentralWidget(self._main)
+    #     layout = QtWidgets.QVBoxLayout()
+    #     static_canvas = FigureCanvas(Figure(figsize=(5, 3)))
+    #     #layout.addWidget(static_canvas)
+    #     #self.addToolBar(NavigationToolbar(static_canvas, self))
+    #     self._static_ax = static_canvas.figure.subplots()
+    #     t = np.linspace(0, 10, 501)
+    #     self._static_ax.plot(t, np.tan(t), ".")
+    #     #self.qwi = QWidget()
+    #     #qwi.setlayout(layout)
+    #     self.tabWidget.addTab(self._static_ax, "ttt")
 
     def _update_canvas(self):
         self._dynamic_ax.clear()
