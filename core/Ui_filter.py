@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'D:\kmol\fft_project\core/filter.ui'
+# Form implementation generated from reading ui file 'filter.ui'
 #
-# Created by: PyQt5 UI code generator 5.10.1
+# Created by: PyQt5 UI code generator 5.11.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -114,14 +114,4 @@ class Ui_Dialog(object):
         self.label_6.setText(_translate("Dialog", "Hz"))
         self.label_7.setText(_translate("Dialog", "Order"))
         self.label_8.setText(_translate("Dialog", "N"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())
 

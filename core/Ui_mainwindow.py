@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'D:\kmol\ControlDesign\core\mainwindow.ui'
+# Form implementation generated from reading ui file 'mainwindow.ui'
 #
-# Created by: PyQt5 UI code generator 5.10.1
+# Created by: PyQt5 UI code generator 5.11.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -60,12 +60,14 @@ class Ui_MainWindow(object):
         self.toolBar.setObjectName("toolBar")
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
-        self.menuBar.setGeometry(QtCore.QRect(0, 0, 870, 21))
+        self.menuBar.setGeometry(QtCore.QRect(0, 0, 870, 22))
         self.menuBar.setObjectName("menuBar")
         self.menuFile = QtWidgets.QMenu(self.menuBar)
         self.menuFile.setObjectName("menuFile")
         self.menuFiliter = QtWidgets.QMenu(self.menuBar)
         self.menuFiliter.setObjectName("menuFiliter")
+        self.menutest = QtWidgets.QMenu(self.menuBar)
+        self.menutest.setObjectName("menutest")
         MainWindow.setMenuBar(self.menuBar)
         self.actionLoad_data = QtWidgets.QAction(MainWindow)
         self.actionLoad_data.setObjectName("actionLoad_data")
@@ -75,12 +77,16 @@ class Ui_MainWindow(object):
         self.actionSave_Image.setObjectName("actionSave_Image")
         self.actionExport_data = QtWidgets.QAction(MainWindow)
         self.actionExport_data.setObjectName("actionExport_data")
+        self.actionBode = QtWidgets.QAction(MainWindow)
+        self.actionBode.setObjectName("actionBode")
         self.menuFiliter.addAction(self.actionLoad_data)
         self.menuFiliter.addAction(self.actionFilter_Design)
         self.menuFiliter.addAction(self.actionSave_Image)
         self.menuFiliter.addAction(self.actionExport_data)
+        self.menutest.addAction(self.actionBode)
         self.menuBar.addAction(self.menuFile.menuAction())
         self.menuBar.addAction(self.menuFiliter.menuAction())
+        self.menuBar.addAction(self.menutest.menuAction())
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(-1)
@@ -95,19 +101,11 @@ class Ui_MainWindow(object):
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.menuFiliter.setTitle(_translate("MainWindow", "Filiter"))
+        self.menutest.setTitle(_translate("MainWindow", "bode"))
         self.actionLoad_data.setText(_translate("MainWindow", "Load Data"))
         self.actionFilter_Design.setText(_translate("MainWindow", "Filter Design"))
         self.actionSave_Image.setText(_translate("MainWindow", "Save Image"))
         self.actionExport_data.setText(_translate("MainWindow", "Export data"))
+        self.actionBode.setText(_translate("MainWindow", "Bode plot"))
 
 import icon_rc
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
-

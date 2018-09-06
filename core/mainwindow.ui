@@ -104,7 +104,7 @@
      <x>0</x>
      <y>0</y>
      <width>870</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -121,8 +121,15 @@
     <addaction name="actionSave_Image"/>
     <addaction name="actionExport_data"/>
    </widget>
+   <widget class="QMenu" name="menutest">
+    <property name="title">
+     <string>bode</string>
+    </property>
+    <addaction name="actionBode"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuFiliter"/>
+   <addaction name="menutest"/>
   </widget>
   <action name="actionLoad_data">
    <property name="text">
@@ -142,6 +149,11 @@
   <action name="actionExport_data">
    <property name="text">
     <string>Export data</string>
+   </property>
+  </action>
+  <action name="actionBode">
+   <property name="text">
+    <string>Bode plot</string>
    </property>
   </action>
  </widget>

@@ -24,7 +24,8 @@ from core.QtModules import (
     Qt, 
     QApplication, 
     QInputDialog, 
-    QColor, 
+    QColor,
+    QWidget,
 )
 from .table_selector import Dialog
 from .Ui_mainwindow import Ui_MainWindow
@@ -32,6 +33,21 @@ from .filter import FiterDialog
 from core.symbolic import SymbolicBlock
 from core.serial.serialUI import serialDlg
 import numpy as np
+import sys
+import time
+
+import numpy as np
+
+from matplotlib.backends.qt_compat import QtCore, QtWidgets, is_pyqt5
+if is_pyqt5():
+    from matplotlib.backends.backend_qt5agg import (
+        FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+else:
+    from matplotlib.backends.backend_qt4agg import (
+        FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+from matplotlib.figure import Figure
+
+
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -41,7 +57,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         """
         Constructor
-        
+
         @param parent reference to the parent widget
         @type QWidget
         """
@@ -61,7 +77,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.toolBar.addAction(QIcon(QPixmap(':/core/icons/save-icon.png')), "Savefile")
         self.toolBar.addAction(QIcon(QPixmap(':/core/icons/Settings-icon.png')), "Setting")
         self.toolBar.addAction(QIcon(QPixmap(':/core/icons/Actions-process-stop-icon.png')), "Stop")
-    
+
+    def on_actionBode_triggered(self):
+
+        #self._main = QtWidgets.QWidget()
+        #self.setCentralWidget(self._main)
+        layout = QtWidgets.QVBoxLayout()
+        static_canvas = FigureCanvas(Figure(figsize=(5, 3)))
+        layout.addWidget(static_canvas)
+        #self.addToolBar(NavigationToolbar(static_canvas, self))
+        self._static_ax = static_canvas.figure.subplots()
+        t = np.linspace(0, 10, 501)
+        self._static_ax.plot(t, np.tan(t), ".")
+        qwi = QWidget()
+        qwi.setlayout(layout)
+        self.tabWidget.addTab(qwi, "ttt")
+
+    def _update_canvas(self):
+        self._dynamic_ax.clear()
+        t = np.linspace(0, 10, 101)
+        # Shift the sinusoid as a function of time.
+        self._dynamic_ax.plot(t, np.sin(t + time.time()))
+        self._dynamic_ax.figure.canvas.draw()
+
     def addChartFromXY(self, title: str, x, y):
         axisX = QValueAxis()
         axisY = QValueAxis()

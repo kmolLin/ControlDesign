@@ -112,4 +112,4 @@ class serialDlg(QDialog, Ui_serialDlg):
         for row in range(table.nrows):
             for col in range(table.ncols):
                 self.sig.append(table.cell(row,col).value)
-        
+
