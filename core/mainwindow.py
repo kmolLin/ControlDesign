@@ -145,7 +145,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     @pyqtSlot(int)
     def on_tabWidget_tabCloseRequested(self, index):
         self.tabWidget.removeTab(index)
-        self.tabcount.pop(index)
+        try:
+            self.tabcount.pop(index)
+        except:
+            pass
     
     @pyqtSlot()
     def on_actionLoad_data_triggered(self):
