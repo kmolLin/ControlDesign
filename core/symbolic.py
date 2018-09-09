@@ -45,6 +45,7 @@ class SymbolicBlock(QWidget, Ui_Dialog):
     
     def getanswer(self, block):
         print(block)
+        print(type(block))
         self.calcendBlock = block
     
     def modelname(self, name):
