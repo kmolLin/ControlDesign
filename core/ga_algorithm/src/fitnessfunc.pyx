@@ -40,7 +40,7 @@ cdef class Fitne(Verification):
         cdef int i
         
         tr = 0
-        pidblock = (self.block * DialogBlock([v[0], v[1], v[2]], [1, 0])).cloop()
+        pidblock = (self.block * DialogBlock([v[2], v[0], v[1]], [1, 0])).cloop()
         T , yout = step((pidblock.num, pidblock.den))
         overshoot = max(yout)
         for i, value in enumerate(yout):
