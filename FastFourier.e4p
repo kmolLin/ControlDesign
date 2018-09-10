@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project FastFourier -->
-<!-- Saved: 2018-09-09, 13:22:18 -->
+<!-- Saved: 2018-09-10, 20:50:25 -->
 <!-- Copyright (C) 2018 ,  -->
 <Project version="5.1">
   <Language>en_US</Language>
@@ -22,6 +22,7 @@
     <Source>core/Ui_table_selector.py</Source>
     <Source>core/__init__.py</Source>
     <Source>core/cont2discdlg.py</Source>
+    <Source>core/etfe.py</Source>
     <Source>core/filter.py</Source>
     <Source>core/ga_algorithm/gatest.py</Source>
     <Source>core/ga_algorithm/src/fitnessfunc.pyx</Source>
