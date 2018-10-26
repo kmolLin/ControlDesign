@@ -107,3 +107,10 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# idle
+.idea
+
+# eric6 project
+._eric6project
+
