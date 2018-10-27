@@ -32,8 +32,7 @@ class FiterDialog(QDialog, Ui_Dialog):
         self.order_edit.setValidator(QDoubleValidator(0, 10, 0, self))
         self.tabcount = tabcount
         self.outputarray = {}
-        
-        if tabcount == []:
+        if tabcount:
             pass
         else:
             print(len(tabcount))
@@ -76,11 +75,12 @@ class FiterDialog(QDialog, Ui_Dialog):
         Nall = len(data)
         t = np.arange(0.0,(Nall-1)*Ts,Ts)
         return t, y
-        
-        
-    
+
     def accept(self):
-        
+        """
+        TODO : add method
+        :return:
+        """
         self.fs = float(self.samplerate.text())
         self.lowcut = float(self.lowcut_edit.text())
         self.highcut = float(self.highcut_edit.text())
@@ -108,8 +108,4 @@ class FiterDialog(QDialog, Ui_Dialog):
             a, b = self.zeroPhase(tmplist)
             self.outputarray["zeroPhase"] = [a, b]
         super(FiterDialog, self).accept()
-        
-        
 
-    
-    

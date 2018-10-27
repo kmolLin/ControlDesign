@@ -17,4 +17,3 @@ print(time()-t0)
 
 for angle in angles:
     print(tuple(round(v, 4) for v in forward_kinematic(angle)))
-    

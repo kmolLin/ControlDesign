@@ -32,8 +32,6 @@ from .Ui_mainwindow import Ui_MainWindow
 from .filter import FiterDialog
 from core.symbolic import SymbolicBlock
 from core.serial.serialUI import serialDlg
-import numpy as np
-import sys
 import time
 
 import numpy as np
@@ -46,8 +44,6 @@ else:
     from matplotlib.backends.backend_qt4agg import (
         FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 from matplotlib.figure import Figure
-
-
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):

@@ -105,4 +105,3 @@ class c2ddlg(QDialog, Ui_c2ddlg):
             for col in dlg.data:
                 for row, value in enumerate(col[1:]):
                     self.sigtmp.append(value)
-    

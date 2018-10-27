@@ -1,7 +1,7 @@
 #coreof etfe
 import math
 
-def etfemethod(data,M,N,T):
+def etfemethod(data, M, N, T):
     index = 1
     if len(input) != len(output):
         return -1
@@ -64,6 +64,4 @@ def etfemethod(data,M,N,T):
         ha = [0] * (M1+1)
         for i in range(0, i <= M1):
             ha[i] = 0.54-0.46 * math.cos(math.pi*i/M1)
-            
-        
-    pass
+
