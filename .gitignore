@@ -114,3 +114,5 @@ venv.bak/
 # eric6 project
 ._eric6project
 
+# mac os
+.DS_Store
