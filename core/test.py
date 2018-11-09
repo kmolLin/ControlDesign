@@ -2,19 +2,16 @@
 
 import numpy as np
 from typing import List
-from math import ceil, sqrt, pi, cos, atan2
+from math import ceil, sqrt, pi, cos, atan2, degrees
 from numpy.fft import fft
 
-def ETFE(input, Ts, N, output):
+
+def ETFE(input: List[float], Ts: float, N: int, output:List[float]):
     """
     input = []
     Ts = time
     N = Number
-
-    DWORD Ncap, i, nfft, M1, L, sc, start, end, index = 1, cnt;
-	CNiReal64Vector ha, a, tfreq, tfreq_h, tmag, tphase, real, imag;
-	CNiComplexReal64Vector U(n), Y(n), UU, YY, Y1, Yd, Ud;
-	double ha_norm, frq_res, rad2deg;
+    output = float
     """
     M = 150
     #output = np.zeros(N)
@@ -80,10 +77,6 @@ def ETFE(input, Ts, N, output):
     YY = np.append(YY, Y)
     UU = np.append(UU, U)
 
-    # print(YY[0])
-    # print(UU[0])
-    # print((YY[0].real, UU[0].real, YY[0].imag, UU[0].imag))
-
     for i in range(len(YY)):
         real = YY[i].real * UU[i].real + YY[i].imag * UU[i].imag
         imag = YY[i].imag * UU[i].real - YY[i].real * UU[i].imag
@@ -113,7 +106,6 @@ def ETFE(input, Ts, N, output):
 
         YY = Filter(ha, a, YY)
         UU = Filter(ha, a, UU)
-
 
     start = int(M1 + (M1 / 2) + sc - index)
     end = int(M1 + (M1 / 2) + L / 2 - index)
@@ -147,25 +139,22 @@ def ETFE(input, Ts, N, output):
     for i in range(N):
         tfreq.append((i + 1) * frq_res)
         tfreq_h.append(tfreq[i] / (2 * pi))
-        # real[i] = (yd[i].real * ud[i].real + yd[i].imag * ud[i].imag) / \
-        #           (pow(ud[i].real, 2) + pow(ud[i].imag, 2))
-        # imag[i] = (yd[i].imag * ud[i].real - yd[i].real * ud[i].imag) / \
-        #           (pow(ud[i].real, 2) + pow(ud[i].imag, 2))
         real = (yd[i].real * ud[i].real + yd[i].imag * ud[i].imag) / \
                   (pow(ud[i].real, 2) + pow(ud[i].imag, 2))
         imag = (yd[i].imag * ud[i].real - yd[i].real * ud[i].imag) / \
                   (pow(ud[i].real, 2) + pow(ud[i].imag, 2))
-        tmag.append(float(sqrt(pow(real, 2) + pow(imag, 2))))
+        tmag.append(degrees(float(sqrt(pow(real, 2) + pow(imag, 2)))))
         tphase.append(float(atan2(imag, real)))
 
     #print(tmag)
     #print(tfreq, tfreq_h, real, imag, tmag, tphase)
 
+
     import matplotlib.pyplot as plt
     plt.figure("Mag")
-    plt.semilogx(tfreq, tmag)
+    plt.semilogx(tfreq_h, tmag)
     plt.figure("Phase")
-    plt.semilogx(tfreq, tphase)
+    plt.semilogx(tfreq_h, tphase)
     plt.show()
 
 
@@ -187,11 +176,9 @@ def Filter(b, a, x):
     tmp = np.array([], dtype=complex)
 
     #print(alen, blen, index)
-
     xx.resize(blen)
     yy.resize(alen)
     y.resize(index)
-
     ca = a
     cb = b
     tmp = x
@@ -200,13 +187,10 @@ def Filter(b, a, x):
     while i < alen:
         ca[i] /= ca[0]
         i = i + 1
-
     i = 0
     while i < index:
-
         yy[0] = 0
         xx[0] = tmp[i]
-
         j = 0
         real_value = 0
         imag_value = 0
@@ -214,17 +198,13 @@ def Filter(b, a, x):
             real_value += cb[j] * xx[j].real
             imag_value += cb[j] * xx[j].imag
             j = j + 1
-
         y[i] = complex(real_value, imag_value)
-
         j = 1
         while j < alen:
             real_value -= ca[j] * yy[j].real
             imag_value -= ca[j] * yy[j].imag
             j = j + 1
-
         y[i] = complex(real_value, imag_value)
-
         j = blen - 1
         while j > 0:
             xx[j] = xx[j - 1]
@@ -247,7 +227,6 @@ def Norm(x):
         sum += pow(tmp[i], 2)
 
     return sqrt(sum)
-
 
 
 if __name__ == '__main__':
