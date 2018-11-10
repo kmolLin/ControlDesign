@@ -50,6 +50,8 @@ cpdef tuple ETFE(list input, double Ts, int N, list output):
     M1 = int((L / M))# 109
     cdef int sc = int(L / (2 * N))# sc = 1
 
+    # U : input signal
+    # Y : output signal
     Y = fft(Y)
     U = fft(U)
 
@@ -69,11 +71,13 @@ cpdef tuple ETFE(list input, double Ts, int N, list output):
     UU = np.append(UU, U)
 
     cdef double real, imag
+    # YY =  YY * UU
     for i in range(len(YY)):
         real = YY[i].real * UU[i].real + YY[i].imag * UU[i].imag
         imag = YY[i].imag * UU[i].real - YY[i].real * UU[i].imag
         YY[i] = complex(real, imag)
 
+    # UU = hypot(UU) + 0j
     cdef double tmp
     for i in range(len(UU)):
         tmp = hypot(UU[i].real, UU[i].imag)
