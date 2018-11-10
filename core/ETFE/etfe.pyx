@@ -17,6 +17,10 @@ cpdef tuple ETFE(list input, double Ts, int N, list output):
     Ts = time
     N = Number
     output = float
+    :return
+    tfreq: (Hz)
+    tmag: (DB)
+    tphase: (Deg)
     """
     cdef int M = 150
     cdef int index = 1
@@ -127,6 +131,7 @@ cpdef tuple ETFE(list input, double Ts, int N, list output):
     cdef double real_value, imag_value
     cdef list tmag = []
     cdef list tphase = []
+    cdef double tmp_clear = 0.
 
     for i in range(N):
         tfreq.append((i + 1) * frq_res)
@@ -134,8 +139,9 @@ cpdef tuple ETFE(list input, double Ts, int N, list output):
         den = (ud[i].real * ud[i].real + ud[i].imag * ud[i].imag)
         real_value = (yd[i].real * ud[i].real + yd[i].imag * ud[i].imag) / den
         imag_value = (yd[i].imag * ud[i].real - yd[i].real * ud[i].imag) / den
-        tmag.append(hypot(real_value, imag_value))
-        tphase.append(atan2(imag_value, real_value))
+        tmp_clear = hypot(real_value, imag_value)
+        tmag.append(20 * np.log10(tmp_clear if tmp_clear == 0.  else tmp_clear))
+        tphase.append(atan2(imag_value, real_value) * 180. / pi)
 
     return tfreq, tmag, tphase
 
