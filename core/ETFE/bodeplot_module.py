@@ -2,8 +2,9 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-import math
 from typing import List
+
+__all__ = ['bode_plot']
 
 
 def bode_plot(omega: List, mag: List, phase: List):
@@ -11,8 +12,21 @@ def bode_plot(omega: List, mag: List, phase: List):
     fig = plt.gcf()
     ax_mag = None
     ax_phase = None
-    ax_mag = plt.subplot(211, label='control-bode-magnitude')
-    ax_phase = plt.subplot(212, label='control-bode-phase', sharex=ax_mag)
+
+    # Get the current axes if they already exist
+    for ax in fig.axes:
+        if ax.get_label() == 'control-bode-magnitude':
+            ax_mag = ax
+        elif ax.get_label() == 'control-bode-phase':
+            ax_phase = ax
+
+    if ax_mag is None or ax_phase is None:
+        plt.clf()
+        ax_mag = plt.subplot(211, label='control-bode-magnitude')
+        ax_phase = plt.subplot(212, label='control-bode-phase',
+                               sharex=ax_mag)
+
+    # Magnitude plot
     pltline = ax_mag.semilogx(omega, mag)
 
     ax_mag.grid(True, which='both')
@@ -33,4 +47,4 @@ def bode_plot(omega: List, mag: List, phase: List):
     ax_phase.grid(True, which='both')
     ax_phase.set_xlabel("Frequency (Hz)")
 
-    plt.show()
+    #plt.show()

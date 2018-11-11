@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'cont2discdlg.ui'
+# Form implementation generated from reading ui file '/Users/smpss91341/Desktop/ControlDesign/core/cont2discdlg.ui'
 #
 # Created by: PyQt5 UI code generator 5.11.2
 #

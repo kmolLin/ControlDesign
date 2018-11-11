@@ -4,10 +4,10 @@
 Module implementing c2ddlg.
 """
 from core.QtModules import (
-    pyqtSlot, 
-    QDialog, 
-    QDoubleValidator, 
-    QFileDialog, 
+    pyqtSlot,
+    QDialog,
+    QDoubleValidator,
+    QFileDialog,
 )
 import numpy as np
 from scipy.signal import cont2discrete, impulse, step
@@ -16,7 +16,7 @@ from .table_selector import Dialog
 
 
 class c2ddlg(QDialog, Ui_c2ddlg):
-    
+
     def __init__(self, calcendBlock, parent=None):
         super(c2ddlg, self).__init__(parent)
         self.setupUi(self)
@@ -29,7 +29,7 @@ class c2ddlg(QDialog, Ui_c2ddlg):
         self.indcator = ["zoh", "bilinear"]
         self.selector = 'impuse'
         self.outputarray = []
-        
+
     def calcc2d(self, e, num, den, sampletime):
         u = []
         for k, e_k in enumerate(e):
@@ -38,20 +38,20 @@ class c2ddlg(QDialog, Ui_c2ddlg):
                 if k - i < 0:
                     continue
                 else:
-                    sum1 += num[i]*e[k-i]
+                    sum1 += num[i] * e[k - i]
             sum2 = 0
             for io in range(1, len(den)):
                 if k == 0:
                     sum2 += 0
                     continue
-                if k-io < 0:
+                if k - io < 0:
                     sum2 += 0
                 else:
-                    sum2 += den[io] * u[k-io]
+                    sum2 += den[io] * u[k - io]
             u.append(sum1 - sum2)
-        t = np.arange(0, sampletime*(len(e)), sampletime)
+        t = np.arange(0, sampletime * (len(e)), sampletime)
         return t, u
-        
+
     def setMaskonui(self, check):
         self.sampletime_label.setEnabled(check)
         self.ts_edit.setEnabled(check)
@@ -59,22 +59,22 @@ class c2ddlg(QDialog, Ui_c2ddlg):
         self.method_label.setEnabled(check)
         self.methodbox.setEnabled(check)
         self.loadfile.setEnabled(check)
-    
+
     @pyqtSlot()
     def on_custom_radio_clicked(self):
         self.setMaskonui(True)
         self.selector = 'custom'
-    
+
     @pyqtSlot()
     def on_impuse_radio_clicked(self):
         self.setMaskonui(False)
         self.selector = 'impuse'
-    
+
     @pyqtSlot()
     def on_step_radio_clicked(self):
         self.setMaskonui(False)
         self.selector = 'step'
-        
+
     def accept(self):
         print(self.selector)
         if self.selector == 'impuse':
@@ -91,10 +91,10 @@ class c2ddlg(QDialog, Ui_c2ddlg):
                 t, u = self.calcc2d(self.sigtmp, dd[0], d1, d3d)
             self.get = [t, u]
         super(c2ddlg, self).accept()
-    
+
     @pyqtSlot()
     def on_loadfile_clicked(self):
-        file, _ = QFileDialog.getOpenFileName(self, 'open file','', 'Excel(*.xlsx)')
+        file, _ = QFileDialog.getOpenFileName(self, 'open file', '', 'Excel(*.xlsx)')
         if not file:
             return
         dlg = Dialog(file, 'signal')
