@@ -145,7 +145,6 @@ cpdef tuple ETFE(list input, double Ts, int N, list output):
 
     return tfreq, tmag, tphase
 
-
 cdef ndarray[complex128_t, ndim=1] Filter(
     ndarray[float64_t, ndim=1] b,
     ndarray[float64_t, ndim=1] a,
@@ -200,7 +199,6 @@ cdef ndarray[complex128_t, ndim=1] Filter(
             j -= 1
 
     return y
-
 
 cdef inline double Norm(ndarray x):
     return sqrt(sum(i * i for i in x))

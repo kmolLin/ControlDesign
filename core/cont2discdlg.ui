@@ -31,16 +31,6 @@
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QLabel" name="denlabel">
-         <property name="text">
-          <string/>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </item>
       </layout>
      </item>
      <item>

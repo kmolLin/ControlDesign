@@ -11,6 +11,9 @@ from core.QtModules import (
 )
 import numpy as np
 from scipy.signal import cont2discrete, impulse, step
+from pylab import Figure
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+from PyQt5 import QtGui
 from .Ui_cont2discdlg import Ui_c2ddlg
 from .table_selector import Dialog
 
@@ -22,13 +25,66 @@ class c2ddlg(QDialog, Ui_c2ddlg):
         self.setupUi(self)
         self.block = calcendBlock
         self.ts_edit.setValidator(QDoubleValidator(0, 10, 6, self))
-        n = self.block.num
-        d = self.block.den
-        self.numlabel.setText(f"{n}")
-        self.denlabel.setText(f"{d}")
+        self.numlabel.setPixmap(self.math_tex_to_qpixmap(
+            self.init_math_equation(self.block.num,
+                                self.block.den), 25))
         self.indcator = ["zoh", "bilinear"]
         self.selector = 'impuse'
         self.outputarray = []
+
+    def init_math_equation(self, n, d):
+        test_n = ""
+        for i in range(len(n.c)):
+            tmp = n.c[i]
+            ordere = len(n.c) - 1 - i
+            if tmp == 0:
+                continue
+            if ordere == 0:
+                test_n += f"{tmp}"
+                break
+            test_n += f"{tmp} S^{ordere} +"
+        test_d = ""
+        for i in range(len(d.c)):
+            tmp = d.c[i]
+            ordere = len(d.c) - 1 - i
+            if tmp == 0:
+                continue
+            if ordere == 0:
+                test_d += f"{tmp}"
+                break
+            test_d += f"{tmp} S^{ordere} +"
+        math_text = "$\\frac{ {" + test_n + "} } { {" + test_d + "} }$"
+        return math_text
+
+    def math_tex_to_qpixmap(self, math_tex: str, fs: int):
+
+        # set up a mpl figure instance
+        fig = Figure()
+        fig.patch.set_facecolor('none')
+        fig.set_canvas(FigureCanvasAgg(fig))
+        renderer = fig.canvas.get_renderer()
+
+        # plot the math_tex expression
+        ax = fig.add_axes([0, 0, 1, 1])
+        ax.axis('off')
+        ax.patch.set_facecolor('none')
+        t = ax.text(0, 0, math_tex, ha='left', va='bottom', fontsize=fs)
+
+        # fit figure size to text artist
+        f_width, f_height = fig.get_size_inches()
+        fig_bbox = fig.get_window_extent(renderer)
+        text_bbox = t.get_window_extent(renderer)
+        tight_fwidth = text_bbox.width * f_width / fig_bbox.width
+        tight_fheight = text_bbox.height * f_height / fig_bbox.height
+        fig.set_size_inches(tight_fwidth, tight_fheight)
+
+        # convert mpl figure to QPixmap
+        buf, size = fig.canvas.print_to_buffer()
+        qimage = QtGui.QImage.rgbSwapped(QtGui.QImage(buf, size[0], size[1],
+                                                      QtGui.QImage.Format_ARGB32))
+        qpixmap = QtGui.QPixmap(qimage)
+
+        return qpixmap
 
     def calcc2d(self, e, num, den, sampletime):
         u = []

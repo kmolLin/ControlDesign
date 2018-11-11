@@ -35,7 +35,6 @@ from core.serial.serialUI import serialDlg
 import time
 
 import numpy as np
-from scipy import signal
 from matplotlib.backends.qt_compat import QtCore, QtWidgets, is_pyqt5
 from matplotlib.backends.backend_qt5agg import (
         FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
@@ -43,7 +42,6 @@ from matplotlib.backends.backend_qt5agg import (
 from .ETFE.etfe import ETFE
 from matplotlib.figure import Figure
 from .ETFE.bodeplot_module import bode_plot
-
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -234,7 +232,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tabWidget.addTab(self.view, title)
         self.tabcount.append([title, self.view])
         
-        def addline(y:float):
+        def addline(y: float):
             print(line.count()*0.1, y)
             line.append(line.count(), y)
         
