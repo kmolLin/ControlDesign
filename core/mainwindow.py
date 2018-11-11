@@ -40,7 +40,10 @@ from matplotlib.backends.qt_compat import QtCore, QtWidgets, is_pyqt5
 from matplotlib.backends.backend_qt5agg import (
         FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 
+from .ETFE.etfe import ETFE
 from matplotlib.figure import Figure
+from .ETFE.bodeplot_module import bode_plot
+
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -244,21 +247,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     @pyqtSlot()
     def on_actionBode_triggered(self):
         
-        s1 = signal.lti([1], [1, 1])
-        w, mag, phase = signal.bode(s1)
-        
+        # TODO : testcode for etfe bode draw
+
+        file = open("core/ETFE/testcode.txt", "r")
+        lines = file.readlines()
+        timex = []
+        input = []
+        output = []
+        for line in lines:
+            timex.append(float(line.split(' ')[0]))
+            input.append(float(line.split(' ')[1]))
+            output.append(float(line.split(' ')[2]))
+        # TODO : N = 8 * 1024 ???
+        n = 1024. * 8
+        # t_freq_h: units (Hz)
+        # t_mag: units (DB)
+        # t_phase: units (Deg)
+        t_freq_h, t_mag, t_phase = ETFE(input, 0.0005, n, output)
+        figure_merge = bode_plot(t_freq_h, t_mag, t_phase, False)
+
         wi = QWidget(self)
         layout = QtWidgets.QVBoxLayout(wi)
-        dbplotWidget = FigureCanvas(Figure(figsize=(5, 3)))
-        dbplot = dbplotWidget.figure.subplots()
-        dbplot.set_title("Bode Diagram")
-        dbplot.set_ylabel("Magnitude(dB)")
-        dbplot.semilogx(w, mag)
+        dbplotWidget = FigureCanvas(figure_merge)
         layout.addWidget(dbplotWidget)
-        phaseWidget = FigureCanvas(Figure(figsize=(5, 3)))
-        phplot = phaseWidget.figure.subplots()
-        phplot.set_ylabel("Phase(deg)")
-        phplot.set_xlabel("Frequency (rad/sec)")
-        phplot.semilogx(w, phase)
-        layout.addWidget(phaseWidget)
+        self.addToolBar(NavigationToolbar(dbplotWidget, self))
         self.tabWidget.addTab(wi, "Bode")

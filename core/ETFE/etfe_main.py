@@ -22,4 +22,4 @@ if __name__ == '__main__':
     # t_phase: units (Deg)
     t_freq_h, t_mag, t_phase = ETFE(input, 0.0005, n, output)
     print(time() - t0)
-    bode_plot(t_freq_h, t_mag, t_phase)
+    test = bode_plot(t_freq_h, t_mag, t_phase, False)

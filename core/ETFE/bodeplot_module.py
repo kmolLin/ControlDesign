@@ -7,11 +7,12 @@ from typing import List
 __all__ = ['bode_plot']
 
 
-def bode_plot(omega: List, mag: List, phase: List):
+def bode_plot(omega: List, mag: List, phase: List, control_draw: bool):
 
     fig = plt.gcf()
     ax_mag = None
     ax_phase = None
+    figure_merge, axes = plt.subplots(2, 1)
 
     # Get the current axes if they already exist
     for ax in fig.axes:
@@ -22,9 +23,11 @@ def bode_plot(omega: List, mag: List, phase: List):
 
     if ax_mag is None or ax_phase is None:
         plt.clf()
-        ax_mag = plt.subplot(211, label='control-bode-magnitude')
-        ax_phase = plt.subplot(212, label='control-bode-phase',
+        axes[0] = plt.subplot(211, label='control-bode-magnitude')
+        axes[1] = plt.subplot(212, label='control-bode-phase',
                                sharex=ax_mag)
+        ax_mag = axes[0]
+        ax_phase = axes[1]
 
     # Magnitude plot
     pltline = ax_mag.semilogx(omega, mag)
@@ -47,4 +50,7 @@ def bode_plot(omega: List, mag: List, phase: List):
     ax_phase.grid(True, which='both')
     ax_phase.set_xlabel("Frequency (Hz)")
 
-    #plt.show()
+    if control_draw:
+        plt.show()
+    else:
+        return figure_merge
