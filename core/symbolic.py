@@ -14,7 +14,7 @@ from core.QtModules import (
 from core.text_editor import TextEditor
 from core.loggingHandler import XStream
 from core.cont2discdlg import c2ddlg
-from .Ui_symbolic import Ui_Dialog
+from .widgets.Ui_symbolic import Ui_Dialog
 from .rpsymbolic.dialogBlock import DialogBlock
 
 

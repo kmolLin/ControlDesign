@@ -14,7 +14,7 @@ from scipy.signal import cont2discrete, impulse, step
 from pylab import Figure
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from PyQt5 import QtGui
-from .Ui_cont2discdlg import Ui_c2ddlg
+from .widgets.Ui_cont2discdlg import Ui_c2ddlg
 from .table_selector import Dialog
 
 

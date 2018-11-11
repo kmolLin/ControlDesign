@@ -6,7 +6,7 @@ Module implementing FiterDialog.
 
 from core.QtModules import (QDialog, pyqtSlot, QDoubleValidator, 
 )
-from .Ui_filter import Ui_Dialog
+from .widgets.Ui_filter import Ui_Dialog
 from scipy.signal import butter, lfilter, filtfilt
 
 import numpy as np

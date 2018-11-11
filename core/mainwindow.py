@@ -28,7 +28,7 @@ from core.QtModules import (
     QWidget,
 )
 from .table_selector import Dialog
-from .Ui_mainwindow import Ui_MainWindow
+from .widgets.Ui_mainwindow import Ui_MainWindow
 from .filter import FiterDialog
 from core.symbolic import SymbolicBlock
 from core.serial.serialUI import serialDlg
@@ -40,7 +40,6 @@ from matplotlib.backends.backend_qt5agg import (
         FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 
 from .ETFE.etfe import ETFE
-from matplotlib.figure import Figure
 from .ETFE.bodeplot_module import bode_plot
 
 
@@ -246,9 +245,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def on_actionBode_triggered(self):
         
         # TODO : testcode for etfe bode draw
-
-        file = open("core/ETFE/testcode.txt", "r")
-        lines = file.readlines()
+        file, _ = QFileDialog.getOpenFileName(self, 'Open file', '', 'Excel(*.txt)')
+        if not file:
+            return
+        with open(file, 'r') as f:
+            lines = f.readlines()
         timex = []
         input = []
         output = []
