@@ -4,8 +4,9 @@ from etfe import ETFE, sys_frq_rep
 from time import time
 from bodeplot_module import bode_plot
 
-# def func(x, a, b, c, d, e, f, g, h):
-#     return (f * x ** 3 + g * x ** 2 + h * x ** 1)/(a * x ** 5 + b * x ** 4 + c * x ** 3 + d * x ** 2 + e * x ** 1)
+
+def func(x, a, b, c, d, e, f, g, h):
+    return (f * x ** 3 + g * x ** 2 + h * x ** 1) / (a * x ** 5 + b * x ** 4 + c * x ** 3 + d * x ** 2 + e * x ** 1)
 
 
 if __name__ == '__main__':
