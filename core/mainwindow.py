@@ -39,7 +39,7 @@ from matplotlib.backends.qt_compat import QtCore, QtWidgets, is_pyqt5
 from matplotlib.backends.backend_qt5agg import (
         FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 
-from .ETFE.etfe import ETFE
+from .ETFE.etfe import ETFE, sys_frq_rep
 from .ETFE.bodeplot_module import bode_plot
 
 
@@ -258,12 +258,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             input.append(float(line.split(' ')[1]))
             output.append(float(line.split(' ')[2]))
         # TODO : N = 8 * 1024 ???
-        n = 1024. * 8
+        n = 1024. * 16
         # t_freq_h: units (Hz)
         # t_mag: units (DB)
         # t_phase: units (Deg)
-        t_freq_h, t_mag, t_phase = ETFE(input, 0.0005, n, output)
-        figure_merge = bode_plot(t_freq_h, t_mag, t_phase, False)
+        tfreq, tfreq_h, tmag_sys, tphase, imag_value, real_value = ETFE(input, 0.0005, n, output)
+        mag, phase = sys_frq_rep(0.01, real_value, imag_value, tfreq,
+                               tmag_sys, tphase)
+
+        figure_merge = bode_plot(tfreq_h, mag, phase, False)
 
         wi = QWidget(self)
         layout = QtWidgets.QVBoxLayout(wi)

@@ -6,7 +6,7 @@ from numpy cimport (
     float64_t,
     complex128_t,
 )
-from libc.math cimport ceil, sqrt, pi, cos, atan2, hypot
+from libc.math cimport ceil, sqrt, pi, cos, atan2, hypot, sin
 from numpy.fft import fft
 
 # TODO : check mag plot value
@@ -128,7 +128,8 @@ cpdef tuple ETFE(list input, double Ts, int N, list output):
     cdef double frq_res = pi / (N * Ts)
     cdef list tfreq = []
     cdef list tfreq_h = []
-    cdef double real_value, imag_value
+    cdef list real_value = []
+    cdef list imag_value = []
     cdef list tmag = []
     cdef list tphase = []
     cdef double tmp_clear = 0.
@@ -137,13 +138,13 @@ cpdef tuple ETFE(list input, double Ts, int N, list output):
         tfreq.append((i + 1) * frq_res)
         tfreq_h.append(tfreq[i] / (2 * pi))
         den = (ud[i].real * ud[i].real + ud[i].imag * ud[i].imag)
-        real_value = (yd[i].real * ud[i].real + yd[i].imag * ud[i].imag) / den
-        imag_value = (yd[i].imag * ud[i].real - yd[i].real * ud[i].imag) / den
-        tmp_clear = hypot(real_value, imag_value)
-        tmag.append(20 * np.log10(tmp_clear if tmp_clear == 0.  else tmp_clear))
-        tphase.append(atan2(imag_value, real_value) * 180. / pi)
+        real_value.append((yd[i].real * ud[i].real + yd[i].imag * ud[i].imag) / den)
+        imag_value.append((yd[i].imag * ud[i].real - yd[i].real * ud[i].imag) / den)
+        tmp_clear = hypot(real_value[i], imag_value[i])
+        tmag.append((tmp_clear if tmp_clear == 0.  else tmp_clear))
+        tphase.append(atan2(imag_value[i], real_value[i]) * 180. / pi)
 
-    return tfreq, tmag, tphase
+    return tfreq, tfreq_h, tmag, tphase, imag_value, real_value
 
 cdef ndarray[complex128_t, ndim=1] Filter(
     ndarray[float64_t, ndim=1] b,
@@ -202,3 +203,71 @@ cdef ndarray[complex128_t, ndim=1] Filter(
 
 cdef inline double Norm(ndarray x):
     return sqrt(sum(i * i for i in x))
+
+cpdef tuple sys_frq_rep(double idkvp, list real_sys, list imag_sys,
+                        list freq_r, list mag_sys, list pha_sys):
+
+    print(mag_sys[0])
+    cdef ndarray[float64_t, ndim=1] tfreq = np.array(freq_r)
+    cdef ndarray[float64_t, ndim=1] mag = np.array(mag_sys)
+    cdef ndarray[float64_t, ndim=1] pha = np.array(pha_sys)
+    cdef ndarray[float64_t, ndim=1] r_sys = np.array(real_sys)
+    cdef ndarray[float64_t, ndim=1] i_sys = np.array(imag_sys)
+
+    cdef int n = len(freq_r)
+    cdef ndarray[float64_t, ndim=1] tmag = np.zeros(n)
+    cdef ndarray[float64_t, ndim=1] tphase = np.zeros(n)
+    cdef ndarray[float64_t, ndim=1] retmag = np.zeros(1)
+    cdef ndarray[float64_t, ndim=1] retpha = np.zeros(1)
+    cdef ndarray[float64_t, ndim=1] pha_m = np.zeros(1)
+    cdef ndarray[float64_t, ndim=1] pha_f = np.zeros(1)
+    cdef ndarray[float64_t, ndim=1] mag_m = np.zeros(1)
+    cdef ndarray[float64_t, ndim=1] mag_f = np.zeros(1)
+
+    cdef double rad2Hz = 1 / (2 * pi)
+
+    cdef double zr, zi, zmag, zphase, nmag, nr, ni, nphase
+    for i in range(n):
+        zr = -r_sys[i]
+        zi = -i_sys[i]
+        zmag = mag[i]
+        zphase = atan2(zi, zr)
+
+        nr = idkvp * (1 + r_sys[i])
+        ni = idkvp * i_sys[i]
+        nmag = hypot(ni, nr)
+        nphase = atan2(ni, nr)
+
+        mag[i] = zmag / nmag
+        pha[i] = zphase - nphase
+        r_sys[i] = mag[i] * cos(pha[i])
+        i_sys[i] = mag[i] * sin(pha[i])
+
+        tmag[i] = 20 * np.log10(mag[i])
+        tphase[i] = np.degrees(pha[i])
+
+    for i in range(n):
+        if tmag[i] == 0 and tfreq[i] < 125.0:
+            pha_m[i] = tphase[0]
+            pha_f[i] = tfreq[0]
+        elif (tmag[i] * retmag[0]) < 0 and tfreq[i] < 125:
+            pha_m[0] = tphase[i] + 180
+            pha_f[0] = tfreq[i] * rad2Hz
+
+        if tphase[i] == -180 and tfreq[i] < 125 * 2 * pi:
+            mag_m[0] = tmag[i]
+            mag_f[0] = tfreq[i]
+
+        elif tphase[i] < -180:
+                if retpha[0] > -180:
+                    if tfreq[i] < 125 * 2 * pi:
+                        mag_m[0] = -1 / tmag[i]
+                        mag_f[0] = tfreq[i] * rad2Hz
+
+        retmag[0] = tmag[i]
+        retpha[0] = abs(tphase[i] + 180)
+
+    return tmag, tphase
+
+
+
