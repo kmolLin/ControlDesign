@@ -3,18 +3,21 @@
 from fitnessfunc import Fitne
 from rga import Genetic
 from dialogBlock import DialogBlock
-from scipy.signal import step
-import matplotlib
+from etfe import ETFE, sys_frq_rep
+from scipy.signal import lti, bode
+import numpy as np
+from bodeplot_module import bode_plot
 import matplotlib.pyplot as plt
 
-block = DialogBlock([1], [1, 1, 2], )
-upper = [100, 100, 100]
-lower = [0.0, 0.0, 0.0]
+#block = DialogBlock([1], [1, 1, 2], )
+upper = [1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000]
+lower = [-1000.0, -1000.0, -1000.0, -1000.0, -1000.0, -1000.0, -1000.0, -1000.0]
 
-def test_algorithm_rga():
+
+def test_algorithm_rga(tfreq_h, mag):
     """Real-coded genetic algorithm."""
-    fun1 = Genetic(Fitne(block, 0.8, upper, lower), {
-        'maxGen': 100, 'report': 10,
+    fun1 = Genetic(Fitne(tfreq_h, mag, upper, lower), {
+        'maxGen': 500, 'report': 10,
         # Genetic
         'nPop': 100,
         'pCross': 0.95,
@@ -25,17 +28,37 @@ def test_algorithm_rga():
     a, b = fun1.run()
     return a, b
 
+
 if __name__ == "__main__":
-    a, b = test_algorithm_rga()
+    file = open("../ETFE/testcode.txt", "r")
+    lines = file.readlines()
+    timex = []
+    input = []
+    output = []
+    for line in lines:
+        timex.append(float(line.split(' ')[0]))
+        input.append(float(line.split(' ')[1]))
+        output.append(float(line.split(' ')[2]))
+    # TODO : N = 8 * 1024 ???
+    n = 1024. * 16
+    # t_freq_h: units (Hz)
+    # t_mag: units (DB)
+    # t_phase: units (Deg)
+    tfreq, tfreq_h, tmag_sys, tphase, imag_value, real_value = \
+        ETFE(input, 0.0005, n, output)
+    mag, pha = sys_frq_rep(0.01, real_value, imag_value, tfreq,
+                           tmag_sys, tphase)
+
+    # print(tfreq_h[:10])
+    # print(len(tfreq_h))
+    # print(len(mag))
+
+    a, b = test_algorithm_rga(tfreq_h, mag)
     print(a)
-    #print(b)
-    #a[2], a[0], a[1] [15.27945163 35.1988434   0.11054415]
-    #a = [ 0.27535107 ,41.54292406, 71.99587281]
-    #a = [0.00000000e+00 ,6.14027430e+01 ,9.91786806e-03]
-    pidblock = (block * DialogBlock([ a[0], a[1], a[2]], [1, 0])).cloop()
-    T, yout = step((pidblock.num, pidblock.den))
-    #print(T, yout)
-    fig, ax = plt.subplots()
-    ax.plot(T, yout)
-    plt.show()
-    
+    system = lti([a[0], a[1], a[2]], [a[3], a[4], a[5], a[6], a[7]])
+    w, mag, phase = bode(system, w=np.array(tfreq_h))
+    bode_plot(w, mag, phase, True)
+    # fig, ax = plt.subplots()
+    # ax.plot(T, yout)
+    # plt.show()
+

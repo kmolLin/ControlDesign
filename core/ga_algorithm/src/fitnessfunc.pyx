@@ -2,60 +2,47 @@
 
 from verify cimport Verification
 from scipy.interpolate import interp1d
-from scipy.signal import step
+from scipy.signal import bode, lti
 import numpy as np
 cimport numpy as np
-from dialogBlock import DialogBlock
+from numpy cimport float64_t, ndarray
 
 
 cdef class Fitne(Verification):
+
+    cdef ndarray data_mag, freqdata, lower, upper
+    cdef int data_len
     
-    cdef object pidblock, block, 
-    cdef double beta
-    cdef np.ndarray upper, lower
-    
-    def __cinit__(self, block:object, beta:double, limitup:list, limitlow:list):
+    def __cinit__(self, freq_data:list, data_of_mag:np.ndarray, limitup:list, limitlow:list):
         # kp/(1,1,2+kp)
-        self.block = block
-        self.beta = beta
+        # self.block = block
+        self.data_mag = data_of_mag
         self.upper = np.array(limitup)
         self.lower = np.array(limitlow)
+        self.freqdata = np.array(freq_data)
+        self.data_len = len(self.freqdata)
         
-    def __call__(self, np.ndarray v):
+    def __call__(self, ndarray[float64_t, ndim=1] v):
         return self.run(v)
         
     cdef int get_nParm(self):
-        return 3
+        return 8
     
-    cdef np.ndarray get_upper(self):
+    cdef ndarray[float64_t, ndim=1] get_upper(self):
         return self.upper
     
-    cdef np.ndarray get_lower(self):
+    cdef ndarray[float64_t, ndim=1] get_lower(self):
         return self.lower
     
     cdef double run(self, np.ndarray v):
-        cdef double overshoot, value, ts, ess, tr, wk
-        cdef np.ndarray T, yout
-        cdef object pidblock
-        cdef int i
-        
-        tr = 0
-        pidblock = (self.block * DialogBlock([v[2], v[0], v[1]], [1, 0])).cloop()
-        T , yout = step((pidblock.num, pidblock.den))
-        overshoot = max(yout)
-        for i, value in enumerate(yout):
-            if value == 1:
-                tr = T[i]
-                break
-            elif value > 1:
-                tr = T[i]-((T[i]-T[i-1])/ (value-yout[i-1]))*(value-1)
-                break
-        ts = T[-1]
-        ess = yout[-1]
-        wk = (1-np.exp(self.beta))*(overshoot+ess)+ np.exp(-1*self.beta)*(ts-tr)
-        return (wk)
+
+        if v[0] == 0 or v[3] == 0:
+            return 999999999
+        system = lti([v[0], v[1], v[2]], [v[3], v[4], v[5], v[6], v[7]])
+        w, mag, phase = bode(system, w=self.freqdata, n=self.data_len)
+        return sum(np.hypot(self.data_mag, mag))
     
-    cpdef object get_result(self, np.ndarray v):
+    cpdef object get_result(self, ndarray[float64_t, ndim=1] v):
         return v
         
         

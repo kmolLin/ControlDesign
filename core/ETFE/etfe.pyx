@@ -142,7 +142,7 @@ cpdef tuple ETFE(list input, double Ts, int N, list output):
         imag_value.append((yd[i].imag * ud[i].real - yd[i].real * ud[i].imag) / den)
         tmp_clear = hypot(real_value[i], imag_value[i])
         tmag.append((tmp_clear if tmp_clear == 0.  else tmp_clear))
-        tphase.append(atan2(imag_value[i], real_value[i]) * 180. / pi)
+        tphase.append(atan2(imag_value[i], real_value[i]))
 
     return tfreq, tfreq_h, tmag, tphase, imag_value, real_value
 
