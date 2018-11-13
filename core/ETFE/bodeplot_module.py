@@ -2,7 +2,7 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-from typing import List
+from typing import List, Tuple
 
 __all__ = ['bode_plot']
 
@@ -30,7 +30,13 @@ def bode_plot(omega: List, mag: List, phase: List, control_draw: bool):
         ax_phase = axes[1]
 
     # Magnitude plot
-    pltline = ax_mag.semilogx(omega, mag)
+    # pltline = ax_mag.semilogx(omega, mag)
+
+    if len(mag) == 1:
+        ax_mag.semilogx(omega, mag[0])
+    elif len(mag) == 2:
+        ax_mag.semilogx(omega, mag[0])
+        ax_mag.semilogx(omega, mag[1], 'r')
 
     ax_mag.grid(True, which='both')
     ax_mag.set_ylabel("Magnitude (dB)")
