@@ -118,5 +118,5 @@ venv.bak/
 .DS_Store
 
 # h5 keras model
-.h5
+*.h5
 
