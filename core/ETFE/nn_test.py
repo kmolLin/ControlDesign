@@ -36,7 +36,7 @@ if __name__ == '__main__':
     model = Sequential()
     model.add(Dense(units=100, input_dim=1, kernel_initializer='normal'))
     model.add(Activation('relu'))
-    model.add(Dense(units=100))
+    model.add(Dense(units=45))
     model.add(Activation('relu'))
     model.add(Dense(units=1))
 
