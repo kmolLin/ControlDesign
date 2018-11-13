@@ -36,7 +36,7 @@ if __name__ == '__main__':
     model = Sequential()
     model.add(Dense(units=100, input_dim=1, kernel_initializer='normal'))
     model.add(Activation('relu'))
-    model.add(Dense(units=45))
+    model.add(Dense(units=450))
     model.add(Activation('relu'))
     model.add(Dense(units=1))
 
@@ -48,6 +48,7 @@ if __name__ == '__main__':
     loss_and_metrics = model.evaluate(x_test, y_test, batch_size=100)
 
     classes = model.predict(x_test, batch_size=1)
+    model.save('my_model.h5')
 
     test = x_test.reshape(-1)
     tmp_container = [mag, classes]

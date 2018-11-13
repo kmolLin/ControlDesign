@@ -116,3 +116,7 @@ venv.bak/
 
 # mac os
 .DS_Store
+
+# h5 keras model
+.h5
+
