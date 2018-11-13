@@ -44,10 +44,11 @@ def bode_plot(omega: List, mag: List, phase: List, control_draw: bool):
     if len(phase) == 1:
         phase_plot = phase[0]
         ax_phase.semilogx(omega, phase_plot)
-        ax_phase.set_ylabel("Phase (deg)")
+
     elif len(phase) == 2:
         ax_phase.semilogx(omega, phase[0])
         ax_phase.semilogx(omega, phase[1], 'r')
+    ax_phase.set_ylabel("Phase (deg)")
 
     def gen_Zero_Centered_Series(val_min, val_max, period):
         v1 = np.ceil(val_min / period - 0.2)
