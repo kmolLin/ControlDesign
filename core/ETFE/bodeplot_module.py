@@ -41,9 +41,13 @@ def bode_plot(omega: List, mag: List, phase: List, control_draw: bool):
     ax_mag.grid(True, which='both')
     ax_mag.set_ylabel("Magnitude (dB)")
 
-    phase_plot = phase
-    ax_phase.semilogx(omega, phase_plot)
-    ax_phase.set_ylabel("Phase (deg)")
+    if len(phase) == 1:
+        phase_plot = phase[0]
+        ax_phase.semilogx(omega, phase_plot)
+        ax_phase.set_ylabel("Phase (deg)")
+    elif len(phase) == 2:
+        ax_phase.semilogx(omega, phase[0])
+        ax_phase.semilogx(omega, phase[1], 'r')
 
     def gen_Zero_Centered_Series(val_min, val_max, period):
         v1 = np.ceil(val_min / period - 0.2)
