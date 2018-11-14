@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import numpy as np
 from keras.models import Sequential, load_model
 from keras.layers import Dense, Activation
@@ -20,10 +22,10 @@ if __name__ == '__main__':
     # TODO : N = 8 * 1024 ???
     n = 1024. * 16
     # t_freq_h: units (Hz)
-    # t_mag: units (DB)
-    # t_phase: units (Deg)
     tfreq, tfreq_h, tmag_sys, tphase, imag_value, real_value = \
         ETFE(input, 0.0005, n, output)
+
+    # mag ,pha (mag (DB), pha (Degree))
     mag, pha = sys_frq_rep(0.01, real_value, imag_value, tfreq,
                            tmag_sys, tphase)
     mag[mag == -inf] = 0
@@ -88,7 +90,7 @@ if __name__ == '__main__':
     test = x_test.reshape(-1)
     tmp_container = [mag, classes]
     tmp_phase = [pha, classes_phase]
-    plt.plot(test, classes, c='r')
-    plt.plot(test, y_test, c='b')
-    #bode_plot(test, tmp_container, tmp_phase, True)
+    # plt.plot(test, classes, c='r')
+    # plt.plot(test, y_test, c='b')
+    bode_plot(test, tmp_container, tmp_phase, True)
     plt.show()

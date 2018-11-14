@@ -12,12 +12,6 @@ def func(x, a, b, c, d, e, f, g, h, i, j):
     return (g * x ** 3 + h * x ** 2 + i * x ** 1 + j) /\
            (a * x ** 5 + b * x ** 4 + c * x ** 3 + d * x ** 2 + e * x ** 1 + f)
 
-# def func(x, a, b, c, d, e, f, g, h, i, j, m, k, o, t):
-#     return ((g * x ** 5 + h * x ** 4 + i * x ** 3 + j * x ** 2 + m * x ** 1 + k) /
-#            (o * x ** 7 + t * x ** 6 + a * x ** 5 +
-#             b * x ** 4 + c * x ** 3 + d * x ** 2 + e * x ** 1 + f))
-
-
 if __name__ == '__main__':
     file = open("testcode.txt", "r")
     lines = file.readlines()
