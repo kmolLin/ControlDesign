@@ -207,7 +207,6 @@ cdef inline double Norm(ndarray x):
 cpdef tuple sys_frq_rep(double idkvp, list real_sys, list imag_sys,
                         list freq_r, list mag_sys, list pha_sys):
 
-    print(mag_sys[0])
     cdef ndarray[float64_t, ndim=1] tfreq = np.array(freq_r)
     cdef ndarray[float64_t, ndim=1] mag = np.array(mag_sys)
     cdef ndarray[float64_t, ndim=1] pha = np.array(pha_sys)
@@ -267,7 +266,7 @@ cpdef tuple sys_frq_rep(double idkvp, list real_sys, list imag_sys,
         retmag[0] = tmag[i]
         retpha[0] = abs(tphase[i] + 180)
 
-    return tmag, tphase
+    return tmag, tphase, r_sys, i_sys
 
 
 

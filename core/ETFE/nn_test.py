@@ -25,6 +25,7 @@ if __name__ == '__main__':
     tfreq, tfreq_h, tmag_sys, tphase, imag_value, real_value = \
         ETFE(input, 0.0005, n, output)
 
+
     # mag ,pha (mag (DB), pha (Degree))
     mag, pha = sys_frq_rep(0.01, real_value, imag_value, tfreq,
                            tmag_sys, tphase)
