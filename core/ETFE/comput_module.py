@@ -1,62 +1,52 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""
-Created on Jan 22 23:56 2014
-I'm not really the author, but...
-@author: Sammy Pfeiffer
-@email: sammypfeiffer@gmail.com
-File found at:
-http://projects.scipy.org/scipy/attachment/ticket/393/invfreq.py
-Cleaned up a bit, removed unused imports.
-"""
 
-import numpy
-from numpy import atleast_1d, real
-from scipy.linalg import solve
+import numpy as np
 
 
-def invfreqs(g, worN, nB, nA, wf=None, nk=0):
-    """Compute frequency response of a digital filter.
-    Description:
-       Computes the numerator (b) and denominator (a) of a digital filter compute
-       its frequency response, given a frequency response at frequencies given in worN.
-                             nB      nB-1                             nk
-               B(s)    (b[0]s + b[1]s   + .... + b[nB-1]s + b[nB])s
-        H(s) = ---- = -----------------------------------------------
-                            nA      nA-1
-               A(s)    a[0]s + a[1]s + .... + a[nA-1]s+a[nA]
-        with a[0]=1.
-       Coefficients are determined by minimizing sum(wf |B-HA|**2).
-       If opt is not None, minimization of sum(wf |H-B/A|**2) is done in at most
-       MaxIter iterations until norm of gradient being less than Tol,
-       with A constrained to be stable.
-    Inputs:
-       worN -- The frequencies at which h was computed.
-       h -- The frequency response.
-    Outputs: (w,h)
-       b, a --- the numerator and denominator of a linear filter.
-    """
-    g = atleast_1d(g)
-    worN = atleast_1d(worN)
-    if wf == None:
-        wf = numpy.ones_like(worN)
-    if len(g) != len(worN) or len(worN)!=len(wf):
-        raise (ValueError, "The lengths of g, worN and wf must coincide.")
-    if numpy.any(worN<0):
-        raise (ValueError, "worN has negative values.")
-    s = 1j * worN
+def sysid_invfreqs(g, w, Nb, Na, wf, iter, tor):
 
-    # Constraining B(s) with nk trailing zeros
-    nm = numpy.maximum(nA, nB+nk)
-    mD = numpy.vander(1j * worN, nm + 1)
-    mH = numpy.mat(numpy.diag(g))
-    mM = numpy.mat(numpy.hstack((mH*numpy.mat(mD[:, -nA:]),
-                                  -numpy.mat(mD[:, -nk-nB-1:][:, :nB+1]))))
-    mW = numpy.mat(numpy.diag(wf))
-    Y = solve(real(mM.H * mW * mM), -real(mM.H * mW * mH * numpy.mat(mD)[:, -nA-1]))
-    a = numpy.ones(nA + 1)
-    a[1:] = Y[:nA].flatten()
-    b = numpy.zeros(nB+nk + 1)
-    b[:nB+1] = Y[nA:].flatten()
+    nk = 0.0
+    Nb = Nb + 0 + 1
+    nm = max(Na + 1, Nb + nk)
+    inda = np.linspace(Na - 1, 0, num=Na, dtype=np.int16)
+    indb = np.linspace(Nb - 2, 0, num=Nb, dtype=np.int16)
+    indg = np.linspace(Na + 1, 0, num=Na + 1, dtype=np.int16)
+    maxiter = iter
+    w_f = np.sqrt(wf)
+    OM = np.ones(len(w), dtype=np.complex)
 
-    return b, a
+    for kom in range(1, nm - 1):
+        OM = np.r_['0,2', OM, (w * 1j) ** kom]
+
+
+    Dva = np.dot(np.transpose(OM[inda, :]), (np.tile(g, (Na, 1))))
+    Dvb = np.transpose(-(OM[indb, :]))
+    # TODO : need to check value
+    print(Dva.shape)
+    print(Dvb.shape)
+    # print(-(OM[indb, :]))
+
+    D = np.dot(np.vstack((Dva, Dvb)), (np.tile(w_f, (Na + Nb, 1))))
+    R = D * D
+    Vd = D * ((-g * OM[Na+1, :]).transpose() * w_f)
+    R = R.real
+    Vd = Vd.real
+    th = Vd / R
+
+    a = th[1: Na].transpose()
+    # a = np.vstack()
+    b = np.vstack((np.zeros(1, nk), np.transpose(th[Na+1: Na+Nb])))
+    v = np.roots(a)
+    vind = np.where(v.real > 0)
+    v[vind] = -v[vind]
+    a = np.poly(v)
+
+
+
+
+
+
+if __name__ == '__main__':
+
+    pass
