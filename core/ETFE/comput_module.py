@@ -19,13 +19,7 @@ def sysid_invfreqs(g, w, Nb, Na, wf, iter, tor):
     for kom in range(1, 14):
         OM = np.r_['0,2', OM, (w * 1j) ** kom]
 
-    # print(OM[inda, :].shape)
-    # print(np.transpose(np.tile(g, (Na, 1))).shape)
-
-    # a = np.transpose(OM[inda, :])
-    # print("@" * 10)
-    # b = np.transpose(np.tile(g, (Na, 1)))
-    Dva = np.transpose(OM[inda, :]) * np.transpose(np.tile(g, (Na, 1)))
+    Dva = (OM[inda, :]).T * (np.tile(g, (Na, 1))).T
     Dvb = np.transpose(-(OM[indb, :]))
     # TODO : need to check value and cloume
     D = np.column_stack((Dva, Dvb)) * np.transpose(np.tile(w_f, (Na + Nb - 1, 1)))
@@ -35,11 +29,9 @@ def sysid_invfreqs(g, w, Nb, Na, wf, iter, tor):
     Vd = Vd.real
 
     th = np.linalg.solve(R, Vd)
-    print(len(th))
+    a = th[0: Na].T
+    print(a)
     return
-
-    a = th[1: Na].transpose()
-    # a = np.vstack()
     b = np.vstack((np.zeros(1, nk), np.transpose(th[Na+1: Na+Nb])))
     v = np.roots(a)
     vind = np.where(v.real > 0)
