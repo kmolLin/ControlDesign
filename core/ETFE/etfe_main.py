@@ -40,7 +40,7 @@ if __name__ == '__main__':
     complex_number.imag = np.array(imag_value)
     complex_number.real = np.array(real_value)
 
-    graw = np.zeros(len(r), dtype=complex)
+    graw = np.ones(20001, dtype=complex)
     graw.imag = np.array(i)
     graw.real = np.array(r)
 

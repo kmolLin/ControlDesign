@@ -140,8 +140,7 @@ cpdef tuple ETFE(list input, double Ts, int N, list output):
         den = (ud[i].real * ud[i].real + ud[i].imag * ud[i].imag)
         real_value.append((yd[i].real * ud[i].real + yd[i].imag * ud[i].imag) / den)
         imag_value.append((yd[i].imag * ud[i].real - yd[i].real * ud[i].imag) / den)
-        tmp_clear = hypot(real_value[i], imag_value[i])
-        tmag.append((tmp_clear if tmp_clear == 0.  else tmp_clear))
+        tmag.append(hypot(real_value[i], imag_value[i]))
         tphase.append(atan2(imag_value[i], real_value[i]))
 
     return tfreq, tfreq_h, tmag, tphase, imag_value, real_value
@@ -265,7 +264,6 @@ cpdef tuple sys_frq_rep(double idkvp, list real_sys, list imag_sys,
 
         retmag[0] = tmag[i]
         retpha[0] = abs(tphase[i] + 180)
-
     return tmag, tphase, r_sys, i_sys
 
 
