@@ -46,10 +46,10 @@ if __name__ == '__main__':
 
     wt = []
     for i in range(20001):
-        wt.append(1.0)
+        # wt.append(1.0)
         if i <= 2000:
             wt.append(10.0)
-        elif 2000< i <= 16000:
+        elif 2000 < i <= 16000:
             wt.append(20.0)
         else:
             wt.append(10.0)

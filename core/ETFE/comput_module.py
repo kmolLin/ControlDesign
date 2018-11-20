@@ -7,32 +7,36 @@ import numpy as np
 def sysid_invfreqs(g, w, Nb, Na, wf, iter, tor):
 
     nk = 0.0
-    Nb = Nb + 0 + 1
+    Nb = Nb + 1
     nm = max(Na + 1, Nb + nk)
     inda = np.linspace(Na - 1, 0, num=Na, dtype=np.int16)
-    indb = np.linspace(Nb - 2, 0, num=Nb, dtype=np.int16)
-    indg = np.linspace(Na + 1, 0, num=Na + 1, dtype=np.int16)
+    indb = np.linspace(Nb - 2, 0, num=Na, dtype=np.int16)
+    indg = np.linspace(Na, 0, num=Na + 1, dtype=np.int16)
     maxiter = iter
     w_f = np.sqrt(wf)
     OM = np.ones(len(w), dtype=np.complex)
 
-    for kom in range(1, nm - 1):
+    for kom in range(1, 14):
         OM = np.r_['0,2', OM, (w * 1j) ** kom]
 
+    # print(OM[inda, :].shape)
+    # print(np.transpose(np.tile(g, (Na, 1))).shape)
 
-    Dva = np.dot(np.transpose(OM[inda, :]), (np.tile(g, (Na, 1))))
+    # a = np.transpose(OM[inda, :])
+    # print("@" * 10)
+    # b = np.transpose(np.tile(g, (Na, 1)))
+    Dva = np.transpose(OM[inda, :]) * np.transpose(np.tile(g, (Na, 1)))
     Dvb = np.transpose(-(OM[indb, :]))
-    # TODO : need to check value
-    print(Dva.shape)
-    print(Dvb.shape)
-    # print(-(OM[indb, :]))
-
-    D = np.dot(np.vstack((Dva, Dvb)), (np.tile(w_f, (Na + Nb, 1))))
-    R = D * D
-    Vd = D * ((-g * OM[Na+1, :]).transpose() * w_f)
+    # TODO : need to check value and cloume
+    D = np.column_stack((Dva, Dvb)) * np.transpose(np.tile(w_f, (Na + Nb - 1, 1)))
+    R = np.dot(D.conj().T, D)
+    Vd = np.dot(D.conj().T, ((-g * np.transpose(OM[Na, :])) * w_f))
     R = R.real
     Vd = Vd.real
-    th = Vd / R
+
+    th = np.linalg.solve(R, Vd)
+    print(len(th))
+    return
 
     a = th[1: Na].transpose()
     # a = np.vstack()
