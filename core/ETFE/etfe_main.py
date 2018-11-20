@@ -5,7 +5,9 @@ from time import time
 from comput_module import sysid_invfreqs
 from bodeplot_module import bode_plot
 from scipy.optimize import curve_fit
+from scipy import signal
 from numpy import inf
+import matplotlib.pyplot as plt
 import numpy as np
 
 
@@ -54,7 +56,17 @@ if __name__ == '__main__':
         else:
             wt.append(10.0)
 
+    omega = np.array([np.pi / 10 * i for i in range(1, 20002)])
     wwt = np.array(tfreq_h, dtype=np.complex)
-    sysid_invfreqs(graw, wwt, 13, 13, np.array(wt), 30, 0.0000001)
+    num, den = sysid_invfreqs(graw, wwt, 13, 13, np.array(wt), 30, 0.0000001)
+    sys = signal.TransferFunction(num, den)
+    W, H = signal.freqresp(sys, w=omega)
+    mag_t = []
+    pha_t = []
+    for i in range(20001):
+        mag_t.append(20 * np.log10(np.linalg.norm(H[i])))
+        # pha_t.append()
+        # TODO : add phase calc to and plot check omega value 11/21
 
-    # test = bode_plot(tfreq_h, [mag], [pha], True)
+    # w, mag1, phase1 = signal.bode(sys, w=tfreq_h)
+    test = bode_plot(W, [mag_t, mag], [pha], True)

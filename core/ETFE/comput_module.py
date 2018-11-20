@@ -16,7 +16,9 @@ def sysid_invfreqs(g, w, Nb, Na, wf, iter, tor):
     w_f = np.sqrt(wf)
     OM = np.ones(len(w), dtype=np.complex128)
     omega = np.array([np.pi / 10 * i for i in range(1, 20002)])
+    tol = 0.0000001
 
+    # TODO need to check omega value
     for kom in range(1, 14):
         OM = np.r_['0,2', OM, (omega * 1j) ** kom]
 
@@ -38,16 +40,73 @@ def sysid_invfreqs(g, w, Nb, Na, wf, iter, tor):
     v[vind] = -v[vind]
     a = np.poly(v)
     # The initial estimate:
-    GC = (b.reshape((1, 13)) @ OM[indb, :]) / (a.reshape(1, 14) @ OM[indg, :]).T
-    e = (GC - g) * w_f
-    Vcap = e.conj().transpose() * e
+    GC = ((b.reshape((1, 13)) @ OM[indb, :]) / (a.reshape(1, 14) @ OM[indg, :])).T
+
+    # print((b.reshape((1, 13)) @ OM[indb, :]).shape)
+    e = (GC - g.reshape(20001, 1)) * w_f.reshape((20001, 1))
+    Vcap = np.dot(e.conj().transpose(), e)
     t = np.hstack((a[1: Na+1], b[int(nk): int(nk+Nb)])).T
     error = np.zeros((1))
-    print(Vcap)
-    # error[0] = Vcap
+    error[0] = Vcap.real
+
+    gndir = 2 * tol + 1
+    count = 0
+    st = 0.0
+    # compute gradient
+    D31 = OM[inda, :].T * (-GC / (a.reshape(1, 14) @ OM[indg, :]).T * np.ones((1, Na)))
+    # TODO : check indb to inda
+    D32 = OM[inda, :].T / ((a.reshape(1, 14) @ OM[indg, :]).T @ np.ones((1, Nb - 1)))
+    D3 = np.hstack((D31, D32)) * (w_f.reshape(20001, 1) @ np.ones((1, 26)))
+
+    while np.linalg.norm(gndir) > tol and count < maxiter and st != 1:
+        count += 1
+
+        # compute Gauss-Newton search direction
+        e = (GC - g.reshape(20001, 1)) * w_f.reshape((20001, 1))
+        R = D3.conj().T @ D3
+        Vd = D3.conj().T @ e
+        R = R.real
+        Vd = Vd.real
+        gndir = np.linalg.solve(R, Vd)
+        l1 = 0
+        k = 1.0
+        V1 = Vcap + 1
+        t1 = t
+
+        # search along the gndir-direction
+        while V1 > Vcap and l1 < 20:
+
+            if l1 == 19:
+                t1 = t
+
+            t1 = t.reshape((26, 1)) - k * gndir
+            a = t1[0: Na].T
+            a = np.insert(a, 0, [1])
+            b = np.transpose(t1[Na: Na + Nb])
+
+            v = np.roots(a)
+            vind = np.where(v.real > 0)
+            v[vind] = -v[vind]
+            a = np.poly(v)
+            t1[0: Na] = a[1: Na + 1].T.reshape((13, 1))
+            GC = ((b.reshape((1, 13)) @ OM[indb, :]) / (a.reshape(1, 14) @ OM[indg, :])).T
+            e = (GC - g.reshape(20001, 1)) * w_f.reshape((20001, 1))
+            V1 = ((GC - g.reshape(20001, 1)) * w_f.reshape((20001, 1))).conj().T @ ((GC - g.reshape(20001, 1)) *
+                                                                                    w_f.reshape((20001, 1)))
+            k = k / 2
+            l1 += 1
+            if l1 == 10:
+                gndir = Vd / np.linalg.norm(R) * len(R)
+                k = 1
+            if l1 == 20:
+                st = 1
+
+        t = t1
+        Vcap = V1
+        error = V1
+
+    return b, a
 
 
-
-if __name__ == '__main__':
-
-    pass
+def phase(G):
+    Phi = np.arctan2(G.imag, G.real)
