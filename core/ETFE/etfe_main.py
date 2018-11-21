@@ -17,7 +17,7 @@ def func(x, a, b, c, d, e, f, g, h, i, j):
 
 
 if __name__ == '__main__':
-    file = open("testcode.txt", "r")
+    file = open("testst.txt", "r")
     lines = file.readlines()
     timex = []
     input = []
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     graw.imag = np.array(i)
     graw.real = np.array(r)
 
-    print(len(tfreq_h))
+    # print(len(tfreq_h))
     wt = []
     for i in range(20001):
         # wt.append(1.0)
@@ -59,13 +59,12 @@ if __name__ == '__main__':
 
     omega = np.array([np.pi / 10 * i for i in range(1, 20002)])
     wwt = np.array(tfreq_h, dtype=np.complex)
-    num, den = sysid_invfreqs(graw, wwt, 13, 13, np.array(wt), 30, 0.0000001)
+    num, den = sysid_invfreqs(graw, wwt, 10, 11, np.array(wt), 30, 0.0000001)
     sys = signal.TransferFunction(num, den)
-    print(num, den)
     W, H = signal.freqresp(sys, w=tfreq_h)
     mag_t = []
     pha_t = []
-    for i in range(20001):
+    for i in range(len(tfreq_h)):
         mag_t.append(20 * np.log10(np.linalg.norm(H[i])))
         pha_t.append(np.rad2deg(phase(H[i])))
 
