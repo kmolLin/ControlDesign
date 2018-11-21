@@ -15,16 +15,14 @@ def sysid_invfreqs(g, w, Nb, Na, wf, iter, tor):
     maxiter = iter
     w_f = np.sqrt(wf)
     OM = np.ones(len(w), dtype=np.complex128)
-    omega = np.array([np.pi / 10 * i for i in range(1, 20002)])
+    # omega = np.array([np.pi / 10 * i for i in range(1, 20002)])
     tol = 0.0000001
-
     # TODO need to check omega value
     for kom in range(1, 14):
-        OM = np.r_['0,2', OM, (omega * 1j) ** kom]
+        OM = np.r_['0,2', OM, (w * 1j) ** kom]
 
     Dva = (OM[inda, :]).T * (g.reshape((20001, 1)) * np.ones((1, 13)))
     Dvb = np.transpose(-(OM[indb, :]))
-    # TODO : need to check value and cloume
     D = np.column_stack((Dva, Dvb)) * w_f.reshape((20001, 1)) * np.ones((1, Na + Nb - 1))
     R = np.dot(D.conj().T, D)
     Vd = np.dot(D.conj().T, ((-g * np.transpose(OM[Na, :])) * w_f))
@@ -110,3 +108,10 @@ def sysid_invfreqs(g, w, Nb, Na, wf, iter, tor):
 
 def phase(G):
     Phi = np.arctan2(G.imag, G.real)
+    # N = len(Phi)
+    # DF = Phi[0: N - 1] - Phi[1: N]
+    # # TODO : 3.5 is what ?
+    # I = np.where(np.abs(DF) > 3.5)
+    # if I != 0:
+    #     Phi = Phi * 2 * np.pi * np.sign(DF[])
+    return Phi

@@ -2,7 +2,7 @@
 
 from etfe import ETFE, sys_frq_rep
 from time import time
-from comput_module import sysid_invfreqs
+from comput_module import sysid_invfreqs, phase
 from bodeplot_module import bode_plot
 from scipy.optimize import curve_fit
 from scipy import signal
@@ -17,7 +17,7 @@ def func(x, a, b, c, d, e, f, g, h, i, j):
 
 
 if __name__ == '__main__':
-    file = open("testst.txt", "r")
+    file = open("testcode.txt", "r")
     lines = file.readlines()
     timex = []
     input = []
@@ -46,6 +46,7 @@ if __name__ == '__main__':
     graw.imag = np.array(i)
     graw.real = np.array(r)
 
+    print(len(tfreq_h))
     wt = []
     for i in range(20001):
         # wt.append(1.0)
@@ -60,13 +61,13 @@ if __name__ == '__main__':
     wwt = np.array(tfreq_h, dtype=np.complex)
     num, den = sysid_invfreqs(graw, wwt, 13, 13, np.array(wt), 30, 0.0000001)
     sys = signal.TransferFunction(num, den)
-    W, H = signal.freqresp(sys, w=omega)
+    print(num, den)
+    W, H = signal.freqresp(sys, w=tfreq_h)
     mag_t = []
     pha_t = []
     for i in range(20001):
         mag_t.append(20 * np.log10(np.linalg.norm(H[i])))
-        # pha_t.append()
-        # TODO : add phase calc to and plot check omega value 11/21
+        pha_t.append(np.rad2deg(phase(H[i])))
 
     # w, mag1, phase1 = signal.bode(sys, w=tfreq_h)
-    test = bode_plot(W, [mag_t, mag], [pha], True)
+    test = bode_plot(tfreq_h, [mag, mag_t], [pha, pha_t], True)
