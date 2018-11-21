@@ -84,7 +84,7 @@ def sysid_invfreqs(g, w, Nb, Na, wf, iter, tor):
             a = np.poly(v)
             t1[0: Na] = a[1: Na + 1].T.reshape((len(a[1: Na + 1].T), 1))
             GC = ((b @ OM[indb, :]) / (a.reshape(1, len(a)) @ OM[indg, :])).T
-            e = (GC - g.reshape(length_data, 1)) * w_f.reshape((length_data, 1))
+            # e = (GC - g.reshape(length_data, 1)) * w_f.reshape((length_data, 1))
             V1 = ((GC - g.reshape(length_data, 1)) *
                   w_f.reshape((length_data, 1))).conj().T @ ((GC - g.reshape(length_data, 1)) *
                     w_f.reshape((length_data, 1)))
@@ -99,7 +99,7 @@ def sysid_invfreqs(g, w, Nb, Na, wf, iter, tor):
         Vcap = V1
         error = V1
 
-    return b, a
+    return b, a, error
 
 
 def phase(G):

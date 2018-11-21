@@ -5,6 +5,7 @@ from time import time
 from comput_module import sysid_invfreqs, phase
 from bodeplot_module import bode_plot
 from scipy.optimize import curve_fit
+import matplotlib.patches as mpatches
 from scipy import signal
 from numpy import inf
 import matplotlib.pyplot as plt
@@ -17,7 +18,7 @@ def func(x, a, b, c, d, e, f, g, h, i, j):
 
 
 if __name__ == '__main__':
-    file = open("testst.txt", "r")
+    file = open("testcode.txt", "r")
     lines = file.readlines()
     timex = []
     input = []
@@ -58,15 +59,36 @@ if __name__ == '__main__':
             wt.append(10.0)
 
     omega = np.array([np.pi / 10 * i for i in range(1, 20002)])
+    tfreq_h = omega
     wwt = np.array(tfreq_h, dtype=np.complex)
-    num, den = sysid_invfreqs(graw, wwt, 10, 11, np.array(wt), 30, 0.0000001)
+
+    # error_tmp = []
+    # block_tmp = []
+    # for i in range(13, 2, -1):
+    #     num, den, error = sysid_invfreqs(graw, wwt, i - 1, i, np.array(wt), 30, 0.0000000001)
+    #     sys = signal.TransferFunction(num, den)
+    #     W, H = signal.freqresp(sys, w=tfreq_h)
+    #     # print(error.real)
+    #     error_tmp.append(error.real.tolist()[0][0])
+    #     block_tmp.append(i)
+    #
+    # red_patch = mpatches.Patch(color='blue', label='The error of fitting')
+    # plt.stem(block_tmp, error_tmp, '-.')
+    # plt.legend(handles=[red_patch])
+    # plt.show()
+
+    num, den, error = sysid_invfreqs(graw, wwt, 12, 13, np.array(wt), 30, 0.0000000001)
     sys = signal.TransferFunction(num, den)
     W, H = signal.freqresp(sys, w=tfreq_h)
+    # print(error.real)
+
     mag_t = []
     pha_t = []
     for i in range(len(tfreq_h)):
         mag_t.append(20 * np.log10(np.linalg.norm(H[i])))
         pha_t.append(np.rad2deg(phase(H[i])))
-
+    print(time() - t0)
+    print(len(num[0]))
+    print(len(den))
     # w, mag1, phase1 = signal.bode(sys, w=tfreq_h)
     test = bode_plot(tfreq_h, [mag, mag_t], [pha, pha_t], True)
