@@ -4,7 +4,8 @@
 import numpy as np
 
 
-def sysid_invfreqs(g, w, Nb, Na, wf, iter, tor):
+def sysid_invfreqs(g: np.ndarray, w: np.ndarray, Nb: int,
+                    Na: int, wf: np.ndarray, iter: int, tor: float):
 
     nk = 0.0
     Nb = Nb + 1
@@ -17,7 +18,7 @@ def sysid_invfreqs(g, w, Nb, Na, wf, iter, tor):
     w_f = np.sqrt(wf)
     OM = np.ones(len(w), dtype=np.complex128)
     # omega = np.array([np.pi / 10 * i for i in range(1, 20002)])
-    tol = 0.0000001
+    tol = 0.000000001
     # TODO need to check omega value
     for kom in range(1, nm):
         OM = np.r_['0,2', OM, (w * 1j) ** kom]
@@ -32,7 +33,6 @@ def sysid_invfreqs(g, w, Nb, Na, wf, iter, tor):
     a = th[0: Na].T
     a = np.insert(a, 0, [1])
     b = np.transpose(th[Na: Na+Nb])
-
     v = np.roots(a)
     vind = np.where(v.real > 0)
     v[vind] = -v[vind]
@@ -73,7 +73,6 @@ def sysid_invfreqs(g, w, Nb, Na, wf, iter, tor):
 
             if l1 == 19:
                 t1 = t
-
             t1 = t.reshape((Na + Nb, 1)) - k * gndir
             a = t1[0: Na].T
             a = np.insert(a, 0, [1])
@@ -84,7 +83,6 @@ def sysid_invfreqs(g, w, Nb, Na, wf, iter, tor):
             a = np.poly(v)
             t1[0: Na] = a[1: Na + 1].T.reshape((len(a[1: Na + 1].T), 1))
             GC = ((b @ OM[indb, :]) / (a.reshape(1, len(a)) @ OM[indg, :])).T
-            # e = (GC - g.reshape(length_data, 1)) * w_f.reshape((length_data, 1))
             V1 = ((GC - g.reshape(length_data, 1)) *
                   w_f.reshape((length_data, 1))).conj().T @ ((GC - g.reshape(length_data, 1)) *
                     w_f.reshape((length_data, 1)))

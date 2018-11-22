@@ -76,11 +76,9 @@ if __name__ == '__main__':
     # plt.stem(block_tmp, error_tmp, '-.')
     # plt.legend(handles=[red_patch])
     # plt.show()
-
     num, den, error = sysid_invfreqs(graw, wwt, 12, 13, np.array(wt), 30, 0.0000000001)
     sys = signal.TransferFunction(num, den)
     W, H = signal.freqresp(sys, w=tfreq_h)
-    # print(error.real)
 
     mag_t = []
     pha_t = []
@@ -88,7 +86,5 @@ if __name__ == '__main__':
         mag_t.append(20 * np.log10(np.linalg.norm(H[i])))
         pha_t.append(np.rad2deg(phase(H[i])))
     print(time() - t0)
-    print(len(num[0]))
-    print(len(den))
     # w, mag1, phase1 = signal.bode(sys, w=tfreq_h)
-    test = bode_plot(tfreq_h, [mag, mag_t], [pha, pha_t], True)
+    # test = bode_plot(tfreq_h, [mag, mag_t], [pha, pha_t], True)
