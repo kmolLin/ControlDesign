@@ -25,8 +25,10 @@ def sysid_invfreqs(g: np.ndarray, w: np.ndarray, Nb: int,
     Dva = (OM[inda, :]).T * (g.reshape((length_data, 1)) * np.ones((1, Na)))
     Dvb = np.transpose(-(OM[indb, :]))
     D = np.column_stack((Dva, Dvb)) * w_f.reshape((length_data, 1)) * np.ones((1, Na + Nb))
+    # TODO : A_D = D
     R = np.dot(D.conj().T, D)
     Vd = np.dot(D.conj().T, ((-g * np.transpose(OM[Na, :])) * w_f))
+    # TODO : Yd = ((-g * np.transpose(OM[Na, :])) * w_f)
     R = R.real
     Vd = Vd.real
     th = np.linalg.solve(R, Vd)
@@ -36,6 +38,7 @@ def sysid_invfreqs(g: np.ndarray, w: np.ndarray, Nb: int,
     v = np.roots(a)
     vind = np.where(v.real > 0)
     v[vind] = -v[vind]
+    # TODO: V = Xd
     a = np.poly(v)
     # The initial estimate:
     GC = ((b.reshape((1, len(b))) @ OM[indb, :]) / (a.reshape(1, len(a)) @ OM[indg, :])).T
@@ -45,6 +48,7 @@ def sysid_invfreqs(g: np.ndarray, w: np.ndarray, Nb: int,
     error = np.zeros((1))
     error[0] = Vcap.real
 
+    return b, a, error
     gndir = 2 * tol + 1
     count = 0
     st = 0.0
