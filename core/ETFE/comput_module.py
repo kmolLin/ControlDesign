@@ -31,6 +31,7 @@ def sysid_invfreqs(g: np.ndarray, w: np.ndarray, Nb: int,
     # TODO : Yd = ((-g * np.transpose(OM[Na, :])) * w_f)
     R = R.real
     Vd = Vd.real
+    # TODO : lose complex value
     th = np.linalg.solve(R, Vd)
     a = th[0: Na].T
     a = np.insert(a, 0, [1])
