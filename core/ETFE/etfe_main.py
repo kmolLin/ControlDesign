@@ -87,4 +87,4 @@ if __name__ == '__main__':
         pha_t.append(np.rad2deg(phase(H[i])))
     print(time() - t0)
     # w, mag1, phase1 = signal.bode(sys, w=tfreq_h)
-    # test = bode_plot(tfreq_h, [mag, mag_t], [pha, pha_t], True)
+    test = bode_plot(tfreq_h, [mag, mag_t], [pha, pha_t], True)

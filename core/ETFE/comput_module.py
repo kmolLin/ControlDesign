@@ -48,12 +48,11 @@ def sysid_invfreqs(g: np.ndarray, w: np.ndarray, Nb: int,
     t = np.hstack((a[1: Na+1], b[int(nk): int(nk+Nb)])).T
     error = np.zeros((1))
     error[0] = Vcap.real
-
-    return b, a, error
     gndir = 2 * tol + 1
     count = 0
     st = 0.0
     # compute gradient
+    return b, a, error
     D31 = OM[inda, :].T * (-GC / (a.reshape(1, len(a)) @ OM[indg, :]).T * np.ones((1, Na)))
     # TODO : check indb to inda
     D32 = OM[inda, :].T / ((a.reshape(1, len(a)) @ OM[indg, :]).T @ np.ones((1, Nb)))
