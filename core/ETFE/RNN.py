@@ -33,8 +33,6 @@ for i in range(max_val):
     # print('\nInteger value: ',i)
     # print('binary value: ', binary_val[i])
 
-print(int_to_binary)
-
 # NN variables
 learning_rate = 0.1
 
@@ -174,7 +172,5 @@ for j in range(10000):
         for index, x in enumerate(reversed(d)):
             out += x * pow(2, index)
         print(str(a_int) + " + " + str(b_int) + " = " + str(out))
-        print("------------")
-        print(W1)
         print("------------")
 
