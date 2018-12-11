@@ -4,12 +4,33 @@ import numpy as np
 from scipy import signal as sg
 import matplotlib.pyplot as plt
 from keras.models import Sequential
-from keras.layers import Dense, SimpleRNN
+from keras.layers import Dense, LSTM, TimeDistributed
+from keras.optimizers import Adam
 
 h = 3
 s = 3
 h = 3
 h2 = 3
+
+BATCH_START = 0
+TIME_STEPS = 1
+BATCH_SIZE = 5001
+INPUT_SIZE = 1
+OUTPUT_SIZE = 1
+CELL_SIZE = 2
+LR = 0.006
+
+
+def get_batch():
+    global BATCH_START, TIME_STEPS
+    # xs shape (50batch, 20steps)
+    xs = np.arange(BATCH_START, BATCH_START+TIME_STEPS*BATCH_SIZE).reshape((BATCH_SIZE, TIME_STEPS)) / (10*np.pi)
+    seq = np.sin(xs)
+    res = np.cos(xs)
+    BATCH_START += TIME_STEPS
+    # plt.plot(xs[0, :], res[0, :], 'r', xs[0, :], seq[0, :], 'b--')
+    # plt.show()
+    return [seq[:, :, np.newaxis], res[:, :, np.newaxis], xs]
 
 
 def simple_LM(ui, yi):
@@ -22,25 +43,38 @@ def simple_LM(ui, yi):
     print(omega.shape)
 
 
-def nnwork(w, u):
+def nnwork(w, u, t):
     model = Sequential()
-    # model.add(Dense(output_dim=5, input_dim=1, use_bias=False))
-    model.add(SimpleRNN(input_dim=5, output_dim=5, use_bias=False, return_sequences=True))
-    # model.add(Dense(output_dim=5, input_dim=1, use_bias=False))
-    model.compile(loss='mse', optimizer='sgd')
+    # model.add(Dense(output_dim=3, input_dim=1, use_bias=True))
+    model.add(LSTM(
+        batch_input_shape=(BATCH_SIZE, TIME_STEPS, INPUT_SIZE),  # Or: input_dim=INPUT_SIZE, input_length=TIME_STEPS,
+        output_dim=CELL_SIZE,
+        return_sequences=True,
+        stateful=True,
+        # activation=None,
+        use_bias=False
+    ))
+    model.add(TimeDistributed(Dense(OUTPUT_SIZE)))
+    adam = Adam(LR)
+    model.compile(loss='mse', optimizer=adam)
     print(model.summary())
-    return 0
-    print('Training -----------')
-    for step in range(1000):
-        cost = model.train_on_batch(w, u)
-        if step % 100 == 0:
-            print('train cost: ', cost)
 
-    cost = model.evaluate(w, u, batch_size=40)
-    print(model.layers[0].get_weights())
-    # print(model.layers[1].get_weights())
-    return model.predict(w)
-    # print('Weights=', W, '\nbiases=', b)
+    print('Training -----------')
+    for step in range(501):
+        X_batch, Y_batch, xs = w, u, t
+        cost = model.train_on_batch(X_batch, Y_batch)
+        pred = model.predict(X_batch, BATCH_SIZE)
+        # plt.plot(xs[:], Y_batch.flatten(), 'r', xs[:], pred.flatten()[:], 'b--')
+        # plt.ylim((-1.2, 1.2))
+        # plt.draw()
+        # plt.pause(0.1)
+        if step % 10 == 0:
+            # print('train cost: ', cost)
+            pass
+        if step == 500:
+            print('train cost: ', cost)
+            print(model.layers[0].get_weights())
+            return model.predict(X_batch, BATCH_SIZE).flatten()[:]
 
 
 def calcc2d(e, num, den, sampletime):
@@ -75,14 +109,16 @@ if __name__ == "__main__":
     t = np.linspace(0, 10, 5001)
     w = sg.chirp(t, f0=1, f1=6, t1=10, method='linear')
     t, u = calcc2d(w.tolist(), dd[0], d1, d3d)
-    print(len(w))
-    print(len(u))
-    print(tf.to_ss())
-    xxx = nnwork(w, u)
+    # print(w.reshape(5001, 1))
+    print(np.array(u).shape)
+    a = w.reshape(5001, 1)[:, :, np.newaxis]
+    b = np.array(u).reshape(5001, 1)[:, :, np.newaxis]
+    # print(tf.to_ss())
+    xxx = nnwork(a, b, t)
     # simple_LM(w, u)
-    # plt.plot(t, u, 'b')
-    # plt.plot(t, xxx, 'g')
+    plt.plot(t, u, 'b')
+    plt.plot(t, xxx, 'g')
     # plt.plot(t, w, 'r')
-    # plt.show()
+    plt.show()
 
 
