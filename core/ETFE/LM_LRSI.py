@@ -4,7 +4,7 @@ import numpy as np
 from scipy import signal as sg
 import matplotlib.pyplot as plt
 from keras.models import Sequential
-from keras.layers import Dense, LSTM, TimeDistributed
+from keras.layers import Dense, LSTM, TimeDistributed, SimpleRNN
 from keras.optimizers import Adam
 
 h = 3
@@ -14,10 +14,10 @@ h2 = 3
 
 BATCH_START = 0
 TIME_STEPS = 1
-BATCH_SIZE = 5001
+BATCH_SIZE = 100
 INPUT_SIZE = 1
 OUTPUT_SIZE = 1
-CELL_SIZE = 2
+CELL_SIZE = 100
 LR = 0.006
 
 
@@ -45,7 +45,7 @@ def simple_LM(ui, yi):
 
 def nnwork(w, u, t):
     model = Sequential()
-    # model.add(Dense(output_dim=3, input_dim=1, use_bias=True))
+    # model.add(Dense(output_dim=1, input_dim=1, use_bias=True))
     model.add(LSTM(
         batch_input_shape=(BATCH_SIZE, TIME_STEPS, INPUT_SIZE),  # Or: input_dim=INPUT_SIZE, input_length=TIME_STEPS,
         output_dim=CELL_SIZE,
@@ -54,6 +54,14 @@ def nnwork(w, u, t):
         # activation=None,
         use_bias=False
     ))
+    # model.add(SimpleRNN(
+    #     batch_input_shape=(BATCH_SIZE, TIME_STEPS, INPUT_SIZE),
+    #     output_dim=CELL_SIZE,
+    #     use_bias=False,
+    #     return_sequences=True,
+    #     # stateful=True,
+    # ))
+
     model.add(TimeDistributed(Dense(OUTPUT_SIZE)))
     adam = Adam(LR)
     model.compile(loss='mse', optimizer=adam)
@@ -63,18 +71,19 @@ def nnwork(w, u, t):
     for step in range(501):
         X_batch, Y_batch, xs = w, u, t
         cost = model.train_on_batch(X_batch, Y_batch)
+        # exit()
         pred = model.predict(X_batch, BATCH_SIZE)
-        # plt.plot(xs[:], Y_batch.flatten(), 'r', xs[:], pred.flatten()[:], 'b--')
-        # plt.ylim((-1.2, 1.2))
-        # plt.draw()
-        # plt.pause(0.1)
+        plt.plot(xs[:], Y_batch.flatten(), 'r', xs[:], pred.flatten()[:], 'b--')
+        plt.ylim((-1.2, 1.2))
+        plt.draw()
+        plt.pause(0.1)
         if step % 10 == 0:
             # print('train cost: ', cost)
             pass
         if step == 500:
             print('train cost: ', cost)
-            print(model.layers[0].get_weights())
-            return model.predict(X_batch, BATCH_SIZE).flatten()[:]
+            # print(model.layers[0].get_weights())
+            return model.predict(X_batch, BATCH_SIZE).flatten()
 
 
 def calcc2d(e, num, den, sampletime):
@@ -101,22 +110,23 @@ def calcc2d(e, num, den, sampletime):
 
 
 if __name__ == "__main__":
-    num = [1, 1]
-    den = [1, 3, 1]
+    num = [10]
+    den = [1, 10]
     tf = sg.TransferFunction(num, den)
-    dd, d1, d3d = sg.cont2discrete((num, den), 0.002, method="bilinear")
-    # t = np.linspace(0, 10, 101)
-    t = np.linspace(0, 10, 5001)
-    w = sg.chirp(t, f0=1, f1=6, t1=10, method='linear')
-    t, u = calcc2d(w.tolist(), dd[0], d1, d3d)
-    # print(w.reshape(5001, 1))
-    print(np.array(u).shape)
-    a = w.reshape(5001, 1)[:, :, np.newaxis]
-    b = np.array(u).reshape(5001, 1)[:, :, np.newaxis]
-    # print(tf.to_ss())
+    t, yout = sg.step(tf)
+    a = np.ones((len(t), 1))[:, :, np.newaxis]
+    # dd, d1, d3d = sg.cont2discrete((num, den), 0.002, method="bilinear")
+    # # t = np.linspace(0, 10, 101)
+    # t = np.linspace(0, 10, 5001)
+    # w = sg.chirp(t, f0=1, f1=6, t1=10, method='linear')
+    # t, u = calcc2d(w.tolist(), dd[0], d1, d3d)
+    # # print(w.reshape(5001, 1))
+    # print(np.array(u).shape)
+    # a = w.reshape(5001, 1)[:, :, np.newaxis]
+    # b = np.array(u).reshape(5001, 1)[:, :, np.newaxis]
+    b = np.array(yout).reshape((len(t), 1))[:, :, np.newaxis]
     xxx = nnwork(a, b, t)
-    # simple_LM(w, u)
-    plt.plot(t, u, 'b')
+    plt.plot(t, yout, 'b')
     plt.plot(t, xxx, 'g')
     # plt.plot(t, w, 'r')
     plt.show()
