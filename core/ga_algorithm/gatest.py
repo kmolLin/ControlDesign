@@ -79,10 +79,15 @@ if __name__ == "__main__":
     num = [10]
     den = [1, 10]
     tf = sg.TransferFunction(num, den)
-    t, yout = sg.step(tf)
-    a = np.ones(len(t))
-    a, b = test_algorithm_rga(len(t), a, yout)
+    aa, bb = sg.step(tf)
+    a = np.ones(len(aa))
+    a, b = test_algorithm_rga(len(aa), a, bb)
     print(a)
+    tf = sg.TransferFunction([a[0]], [1, a[1]])
+    t, yout = sg.step(tf)
+    plt.plot(t, yout, 'g')
+    plt.plot(aa, bb, 'r')
+    plt.show()
     #
     # dd, d1, d3d = sg.cont2discrete((num, den), 0.002, method="bilinear")
     # t, u = calcc2d(a.tolist(), dd[0], d1, d3d)
