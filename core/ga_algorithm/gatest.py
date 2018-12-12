@@ -11,8 +11,8 @@ from scipy import signal as sg
 import matplotlib.pyplot as plt
 
 #block = DialogBlock([1], [1, 1, 2], )
-upper = [100.0, 100.0]
-lower = [-100.0, -100.0]
+upper = [11.0, 11.0]
+lower = [1, 1]
 
 
 def calcc2d(e, num, den, sampletime):
@@ -41,7 +41,7 @@ def calcc2d(e, num, den, sampletime):
 def test_algorithm_rga(data_time_step, u_input_data, y_output_data):
     """Real-coded genetic algorithm."""
     fun1 = Genetic(Fitne(data_time_step, u_input_data, y_output_data, upper, lower), {
-        'maxGen': 100, 'report': 10,
+        'maxGen': 50, 'report': 10,
         # Genetic
         'nPop': 100,
         'pCross': 0.95,
@@ -76,23 +76,43 @@ if __name__ == "__main__":
     # print(tfreq_h[:10])
     # print(len(tfreq_h))
     # print(len(mag))
+
+    # simulation input
+
+    time_step = np.linspace(0, 1, 101)
+    w = sg.chirp(time_step, f0=1, f1=6, t1=10, method='linear')
     num = [10]
     den = [1, 10]
     tf = sg.TransferFunction(num, den)
-    aa, bb = sg.step(tf)
-    a = np.ones(len(aa))
-    a, b = test_algorithm_rga(len(aa), a, bb)
+    # aa, bb = sg.step(tf, T=time_step)
+    # a = np.ones(len(time_step))
+    dd, d1, d3d = sg.cont2discrete((num, den), 0.01, method="bilinear")
+    aa, bb = calcc2d(w.tolist(), dd[0], d1, d3d)
+
+    # find model
+    # TODO: need to check why sin can't find the correct model from RGA
+    a, b = test_algorithm_rga(len(time_step), w, np.array(bb))
     print(a)
-    tf = sg.TransferFunction([a[0]], [1, a[1]])
-    t, yout = sg.step(tf)
+    # tf = sg.TransferFunction([a[0]], [1, a[1]])
+    # t, yout = sg.step(tf, T=time_step)
+    dd, d1, d3d = sg.cont2discrete(([a[0]], [1, a[1]]), 0.01, method="bilinear")
+    t, yout = calcc2d(w.tolist(), dd[0], d1, d3d)
+    print(f"cost{(sum(np.sqrt(np.square(bb - np.array(yout)))))}")
     plt.plot(t, yout, 'g')
     plt.plot(aa, bb, 'r')
     plt.show()
-    #
-    # dd, d1, d3d = sg.cont2discrete((num, den), 0.002, method="bilinear")
+
+    # dd, d1, d3d = sg.cont2discrete((num, den), 0.01, method="bilinear")
+    # print(d3d)
     # t, u = calcc2d(a.tolist(), dd[0], d1, d3d)
-    # print(type(yout))
-    # plt.plot(t, u, 'r')
+    # # print(np.hypot(bb, np.array(u)))
+    # print(sum(np.hypot(bb, np.array(u))))
+    # print(bb)
+    # print("------")
+    # print(np.array(u))
+    # print("------")
+    # print(sum(np.sqrt(np.square(bb - np.array(u)))))
+    # plt.plot(aa, bb, 'r')
     # plt.plot(t, u, 'g')
     # plt.show()
 

@@ -77,9 +77,10 @@ cdef class Fitne(Verification):
         # t, yout = step(tf)
         a = np.ones(self.data_time_step)
 
-        dd, d1, d3d = cont2discrete(([v[0]], [1, v[1]]), 0.002, method="bilinear")
+        dd, d1, d3d = cont2discrete(([v[0]], [1, v[1]]), 0.01, method="bilinear")
         u = self.calcc2d(a, dd[0], d1, d3d)
-        return sum(np.hypot(self.y_output_data, np.array(u)))
+
+        return sum(np.sqrt(np.square(np.array(u) - self.y_output_data)))
     
     cpdef object get_result(self, ndarray[float64_t, ndim=1] v):
         return v
