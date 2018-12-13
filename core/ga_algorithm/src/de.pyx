@@ -154,7 +154,7 @@ cdef class Differential:
 
     cdef inline double evaluate(self, Chromosome member):
         """Evalute the member in environment."""
-        return self.func(member.v)
+        return self.func.run(member.v)
 
     cdef inline Chromosome find_best(self):
         """Find member that have minimum fitness value from pool."""

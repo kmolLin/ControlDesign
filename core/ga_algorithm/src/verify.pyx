@@ -8,9 +8,8 @@
 # __license__ = "AGPL"
 # __email__ = "pyslvs@gmail.com"
 
-import numpy as np
-cimport numpy as np
 cimport cython
+import numpy as np
 
 
 @cython.freelist(100)
@@ -42,14 +41,17 @@ cdef class Verification:
     
     """Verification function class base."""
     
-    cdef np.ndarray get_upper(self):
+    cdef ndarray get_upper(self):
         return np.array([])
     
-    cdef np.ndarray get_lower(self):
+    cdef ndarray get_lower(self):
         return np.array([])
     
     cdef int get_nParm(self):
         return 0
-    
-    cpdef object get_result(self, np.ndarray v):
+
+    cdef double run(self, ndarray v):
+        return 0
+
+    cpdef object get_result(self, ndarray v):
         return {}

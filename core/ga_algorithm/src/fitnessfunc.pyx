@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# cython: language_level=3
 # fitness fuc
 
 from verify cimport Verification
@@ -7,6 +9,36 @@ import numpy as np
 cimport numpy as np
 from scipy.signal import step, TransferFunction, cont2discrete
 from numpy cimport float64_t, ndarray
+
+
+cdef list calcc2d(
+    ndarray[float64_t, ndim=1] e,
+    ndarray[float64_t, ndim=1] num,
+    ndarray[float64_t, ndim=1] den,
+    long double sampletime
+):
+    cdef list u = []
+    cdef int k, i, io
+    cdef long double sum1, sum2
+    for k, e_k in enumerate(e):
+        sum1 = 0
+
+        for i, num_i in enumerate(num):
+            if k - i < 0:
+                continue
+            else:
+                sum1 += num[i] * e[k - i]
+        sum2 = 0
+        for io in range(1, len(den)):
+            if k == 0:
+                sum2 += 0
+                continue
+            if k - io < 0:
+                sum2 += 0
+            else:
+                sum2 += den[io] * u[k - io]
+        u.append(sum1 - sum2)
+    return u
 
 
 cdef class Fitne(Verification):
@@ -30,39 +62,6 @@ cdef class Fitne(Verification):
         self.u_input_data = np.array(u_input_data)
         # self.data_len = len(self.freqdata)
         self.y_output_data = y_output_data
-        
-    def __call__(self, ndarray[float64_t, ndim=1] v):
-        return self.run(v)
-
-
-    cdef list calcc2d(self,
-        ndarray[float64_t, ndim=1] e,
-        ndarray[float64_t, ndim=1] num,
-        ndarray[float64_t, ndim=1] den,
-        long double sampletime
-    ):
-        cdef list u = []
-        cdef int k, i, io
-        cdef long double sum1, sum2
-        for k, e_k in enumerate(e):
-            sum1 = 0
-
-            for i, num_i in enumerate(num):
-                if k - i < 0:
-                    continue
-                else:
-                    sum1 += num[i] * e[k - i]
-            sum2 = 0
-            for io in range(1, len(den)):
-                if k == 0:
-                    sum2 += 0
-                    continue
-                if k - io < 0:
-                    sum2 += 0
-                else:
-                    sum2 += den[io] * u[k - io]
-            u.append(sum1 - sum2)
-        return u
 
     cdef int get_nParm(self):
         return 4
@@ -83,7 +82,7 @@ cdef class Fitne(Verification):
             return 999999999
 
         dd, d1, d3d = cont2discrete(([v[2], v[3]], [1, v[0], v[1]]), 0.001, method="bilinear")
-        u = self.calcc2d(self.u_input_data, dd[0], d1, d3d)
+        u = calcc2d(self.u_input_data, dd[0], d1, d3d)
         # if sum(np.square(np.array(u, dtype=np.double) - self.y_output_data)) == np.inf or np.nan:
         #     return 999999999
         # print(sum(np.square(np.array(u, dtype=np.double) - self.y_output_data)))
@@ -91,6 +90,3 @@ cdef class Fitne(Verification):
     
     cpdef object get_result(self, ndarray[float64_t, ndim=1] v):
         return v
-        
-        
-        

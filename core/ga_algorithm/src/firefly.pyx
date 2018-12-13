@@ -125,7 +125,7 @@ cdef class Firefly:
         for i in range(self.n):
             # init the Chromosome
             for j in range(self.D):
-                self.fireflys[i].v[j] = randV()*(self.ub[j] - self.lb[j]) + self.lb[j];
+                self.fireflys[i].v[j] = randV()*(self.ub[j] - self.lb[j]) + self.lb[j]
     
     cdef inline void movefireflies(self):
         cdef int i, j, k
@@ -143,7 +143,7 @@ cdef class Firefly:
     cdef inline void evaluate(self):
         cdef Chromosome firefly
         for firefly in self.fireflys:
-            firefly.f = self.func(firefly.v)
+            firefly.f = self.func.run(firefly.v)
     
     cdef inline bool movefly(self, Chromosome me, Chromosome she):
         if me.f <= she.f:
@@ -227,4 +227,4 @@ cdef class Firefly:
                 if self.interrupt_fun():
                     break
         self.report()
-        return self.func.get_result(self.bestFirefly.v), self.fitnessTime
+        return self.bestFirefly.v, self.fitnessTime

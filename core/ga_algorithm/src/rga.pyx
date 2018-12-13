@@ -142,7 +142,7 @@ cdef class Genetic:
                     self.babyChrom[2].v[s] = self.check(s, -0.5 * self.chrom[i].v[s] + 1.5 * self.chrom[i+1].v[s])
                 # evaluate new baby
                 for j in range(3):
-                    self.babyChrom[j].f = self.func(self.babyChrom[j].v)
+                    self.babyChrom[j].f = self.func.run(self.babyChrom[j].v)
                 # maybe use bubble sort? smaller -> larger
                 if self.babyChrom[1].f < self.babyChrom[0].f:
                     self.babyChrom[0], self.babyChrom[1] = self.babyChrom[1], self.babyChrom[0]
@@ -165,12 +165,12 @@ cdef class Genetic:
     cdef inline void fitness(self):
         cdef int j
         for j in range(self.nPop):
-            self.chrom[j].f = self.func(self.chrom[j].v)
+            self.chrom[j].f = self.func.run(self.chrom[j].v)
         self.chromBest.assign(self.chrom[0])
         for j in range(1, self.nPop):
-            if (self.chrom[j].f < self.chromBest.f):
+            if self.chrom[j].f < self.chromBest.f:
                 self.chromBest.assign(self.chrom[j])
-        if (self.chromBest.f < self.chromElite.f):
+        if self.chromBest.f < self.chromElite.f:
             self.chromElite.assign(self.chromBest)
     
     cdef inline void initialPop(self):
@@ -184,7 +184,7 @@ cdef class Genetic:
         for i in range(self.nPop):
             if randV() < self.pMute:
                 s = self.random(self.nParm)
-                if (self.random(2) == 0):
+                if self.random(2) == 0:
                     self.chrom[i].v[s] += self.delta(self.maxLimit[s]-self.chrom[i].v[s])
                 else:
                     self.chrom[i].v[s] -= self.delta(self.chrom[i].v[s]-self.minLimit[s])
@@ -232,7 +232,7 @@ cdef class Genetic:
         // ****       report each mxg modulo rp
         """
         self.initialPop()
-        self.chrom[0].f = self.func(self.chrom[0].v)
+        self.chrom[0].f = self.func.run(self.chrom[0].v)
         self.chromElite.assign(self.chrom[0])
         self.fitness()
         self.report()
@@ -256,4 +256,4 @@ cdef class Genetic:
                 if self.interrupt_fun():
                     break
         self.report()
-        return self.func.get_result(self.chromElite.v), self.fitnessTime
+        return self.chromElite.v, self.fitnessTime

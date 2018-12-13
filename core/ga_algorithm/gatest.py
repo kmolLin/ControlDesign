@@ -74,7 +74,7 @@ if __name__ == "__main__":
     # a = np.ones(len(time_step))
     dd, d1, d3d = sg.cont2discrete((num, den), 0.001, method="bilinear")
     aa, bb = calcc2d(w.tolist(), dd[0], d1, d3d)
-    white_noise_output = np.array(bb) + white_noise
+    white_noise_output = np.array(bb) # + white_noise
 
 
     # find model

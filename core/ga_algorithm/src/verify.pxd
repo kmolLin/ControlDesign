@@ -8,8 +8,7 @@
 # __license__ = "AGPL"
 # __email__ = "pyslvs@gmail.com"
 
-import numpy as np
-cimport numpy as np
+from numpy cimport ndarray
 
 
 cdef enum limit:
@@ -19,14 +18,15 @@ cdef enum limit:
 cdef class Chromosome:
     cdef public int n
     cdef public double f
-    cdef public np.ndarray v
+    cdef public ndarray v
     
     cdef double distance(self, Chromosome obj)
     cpdef void assign(self, Chromosome obj)
 
 
 cdef class Verification:
-    cdef np.ndarray get_upper(self)
-    cdef np.ndarray get_lower(self)
+    cdef ndarray get_upper(self)
+    cdef ndarray get_lower(self)
     cdef int get_nParm(self)
-    cpdef object get_result(self, np.ndarray v)
+    cdef double run(self, ndarray v)
+    cpdef object get_result(self, ndarray v)
