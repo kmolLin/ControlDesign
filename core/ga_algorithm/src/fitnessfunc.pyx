@@ -55,7 +55,7 @@ cdef class Fitne(Verification):
         return u
 
     cdef int get_nParm(self):
-        return 2
+        return 4
     
     cdef ndarray[float64_t, ndim=1] get_upper(self):
         return self.upper
@@ -72,7 +72,7 @@ cdef class Fitne(Verification):
         if v[0] == 0:
             return 999999999
 
-        dd, d1, d3d = cont2discrete(([v[0]], [1, v[1]]), 0.01, method="bilinear")
+        dd, d1, d3d = cont2discrete(([v[2], v[3]], [1, v[0], v[1]]), 0.01, method="bilinear")
         u = self.calcc2d(self.u_input_data, dd[0], d1, d3d)
 
         return sum(np.sqrt(np.square(np.array(u) - self.y_output_data)))

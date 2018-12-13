@@ -11,8 +11,8 @@ from scipy import signal as sg
 import matplotlib.pyplot as plt
 
 #block = DialogBlock([1], [1, 1, 2], )
-upper = [100.0, 100.0]
-lower = [-100, -100]
+upper = [100.0, 100.0, 100.0, 100.0]
+lower = [-100, -100, -100, -100]
 
 
 def calcc2d(e, num, den, sampletime):
@@ -41,7 +41,7 @@ def calcc2d(e, num, den, sampletime):
 def test_algorithm_rga(data_time_step, u_input_data, y_output_data):
     """Real-coded genetic algorithm."""
     fun1 = Genetic(Fitne(data_time_step, u_input_data, y_output_data, upper, lower), {
-        'maxGen': 20, 'report': 10,
+        'maxGen': 40, 'report': 10,
         # Genetic
         'nPop': 100,
         'pCross': 0.95,
@@ -80,8 +80,8 @@ if __name__ == "__main__":
     # simulation input
     time_step = np.linspace(0, 1, 101)
     w = sg.chirp(time_step, f0=1, f1=6, t1=10, method='linear')
-    num = [80]
-    den = [1, 10]
+    num = [2, 5]
+    den = [1, 2, 10]
     tf = sg.TransferFunction(num, den)
     # aa, bb = sg.step(tf, T=time_step)
     # a = np.ones(len(time_step))
@@ -99,15 +99,15 @@ if __name__ == "__main__":
         outt.append(i[1])
     # tf = sg.TransferFunction([a[0]], [1, a[1]])
     # t, yout = sg.step(tf, T=time_step)
-    dd, d1, d3d = sg.cont2discrete(([a[0]], [1, a[1]]), 0.01, method="bilinear")
+    dd, d1, d3d = sg.cont2discrete(([a[2], a[3]], [1, a[0], a[1]]), 0.01, method="bilinear")
     t, yout = calcc2d(w.tolist(), dd[0], d1, d3d)
     print(f"cost{(sum(np.sqrt(np.square(bb - np.array(yout)))))}")
 
-    dd, d1, d3d = sg.cont2discrete((num, den), 0.01, method="bilinear")
-    t, u = calcc2d(w.tolist(), dd[0], d1, d3d)
-    # plt.plot(aa, bb, 'r')
-    # plt.plot(t, u, 'g')
-    plt.plot(tt, outt)
+    # dd, d1, d3d = sg.cont2discrete((num, den), 0.01, method="bilinear")
+    # t, u = calcc2d(w.tolist(), dd[0], d1, d3d)
+    plt.plot(aa, bb, 'r')
+    plt.plot(t, yout, 'g')
+    # plt.plot(tt, outt)
     plt.show()
 
     # a, b = test_algorithm_rga(tfreq_h, mag)
