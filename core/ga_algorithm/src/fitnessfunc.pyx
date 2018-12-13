@@ -15,8 +15,13 @@ cdef class Fitne(Verification):
     cdef int data_len
     cdef int data_time_step
     
-    def __cinit__(self, data_time_step:int, u_input_data:np.ndarray, y_output_data:np.ndarray,
-                  limitup:list, limitlow:list):
+    def __cinit__(self,
+        int data_time_step,
+        ndarray[float64_t, ndim=1] u_input_data,
+        ndarray[float64_t, ndim=1] y_output_data,
+        limitup,
+        limitlow
+    ):
         # kp/(1,1,2+kp)
         # self.block = block
         self.data_time_step = data_time_step
@@ -30,10 +35,15 @@ cdef class Fitne(Verification):
         return self.run(v)
 
 
-    cdef list calcc2d(self, e:np.ndarray, num:np.ndarray, den:np.ndarray ,sampletime:float):
+    cdef list calcc2d(self,
+        ndarray[float64_t, ndim=1] e,
+        ndarray[float64_t, ndim=1] num,
+        ndarray[float64_t, ndim=1] den,
+        long double sampletime
+    ):
         cdef list u = []
         cdef int k, i, io
-        cdef double sum1, sum2
+        cdef long double sum1, sum2
         for k, e_k in enumerate(e):
             sum1 = 0
 
@@ -65,17 +75,19 @@ cdef class Fitne(Verification):
     
     cdef double run(self, np.ndarray v):
         cdef np.ndarray dd, d1, a
-        cdef float d3d
+        cdef long double d3d
         cdef list u = []
         u = []
 
-        if v[0] == 0:
+        if v[2] == 0 or v[0] == 0:
             return 999999999
 
-        dd, d1, d3d = cont2discrete(([v[2], v[3]], [1, v[0], v[1]]), 0.01, method="bilinear")
+        dd, d1, d3d = cont2discrete(([v[2], v[3]], [1, v[0], v[1]]), 0.001, method="bilinear")
         u = self.calcc2d(self.u_input_data, dd[0], d1, d3d)
-
-        return sum(np.sqrt(np.square(np.array(u) - self.y_output_data)))
+        # if sum(np.square(np.array(u, dtype=np.double) - self.y_output_data)) == np.inf or np.nan:
+        #     return 999999999
+        # print(sum(np.square(np.array(u, dtype=np.double) - self.y_output_data)))
+        return sum(np.square(np.array(u, dtype=np.double) - self.y_output_data))
     
     cpdef object get_result(self, ndarray[float64_t, ndim=1] v):
         return v
