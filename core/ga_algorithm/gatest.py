@@ -3,7 +3,7 @@
 from fitnessfunc import Fitne
 from rga import Genetic
 from dialogBlock import DialogBlock
-from etfe import ETFE, sys_frq_rep
+# from etfe import ETFE, sys_frq_rep
 from scipy.signal import lti, bode
 import numpy as np
 from bodeplot_module import bode_plot
@@ -11,8 +11,8 @@ from scipy import signal as sg
 import matplotlib.pyplot as plt
 
 #block = DialogBlock([1], [1, 1, 2], )
-upper = [11.0, 11.0]
-lower = [1, 1]
+upper = [100.0, 100.0]
+lower = [-100, -100]
 
 
 def calcc2d(e, num, den, sampletime):
@@ -41,7 +41,7 @@ def calcc2d(e, num, den, sampletime):
 def test_algorithm_rga(data_time_step, u_input_data, y_output_data):
     """Real-coded genetic algorithm."""
     fun1 = Genetic(Fitne(data_time_step, u_input_data, y_output_data, upper, lower), {
-        'maxGen': 50, 'report': 10,
+        'maxGen': 30, 'report': 10,
         # Genetic
         'nPop': 100,
         'pCross': 0.95,
@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
     time_step = np.linspace(0, 1, 101)
     w = sg.chirp(time_step, f0=1, f1=6, t1=10, method='linear')
-    num = [10]
+    num = [80]
     den = [1, 10]
     tf = sg.TransferFunction(num, den)
     # aa, bb = sg.step(tf, T=time_step)
@@ -98,23 +98,12 @@ if __name__ == "__main__":
     dd, d1, d3d = sg.cont2discrete(([a[0]], [1, a[1]]), 0.01, method="bilinear")
     t, yout = calcc2d(w.tolist(), dd[0], d1, d3d)
     print(f"cost{(sum(np.sqrt(np.square(bb - np.array(yout)))))}")
-    plt.plot(t, yout, 'g')
-    plt.plot(aa, bb, 'r')
-    plt.show()
 
-    # dd, d1, d3d = sg.cont2discrete((num, den), 0.01, method="bilinear")
-    # print(d3d)
-    # t, u = calcc2d(a.tolist(), dd[0], d1, d3d)
-    # # print(np.hypot(bb, np.array(u)))
-    # print(sum(np.hypot(bb, np.array(u))))
-    # print(bb)
-    # print("------")
-    # print(np.array(u))
-    # print("------")
-    # print(sum(np.sqrt(np.square(bb - np.array(u)))))
-    # plt.plot(aa, bb, 'r')
-    # plt.plot(t, u, 'g')
-    # plt.show()
+    dd, d1, d3d = sg.cont2discrete((num, den), 0.01, method="bilinear")
+    t, u = calcc2d(w.tolist(), dd[0], d1, d3d)
+    plt.plot(aa, bb, 'r')
+    plt.plot(t, u, 'g')
+    plt.show()
 
     # a, b = test_algorithm_rga(tfreq_h, mag)
     # print(a)

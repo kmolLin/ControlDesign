@@ -71,14 +71,9 @@ cdef class Fitne(Verification):
 
         if v[0] == 0:
             return 999999999
-        # num =
-        # den =
-        # tf = TransferFunction([v[0]], [1, v[1]])
-        # t, yout = step(tf)
-        a = np.ones(self.data_time_step)
 
         dd, d1, d3d = cont2discrete(([v[0]], [1, v[1]]), 0.01, method="bilinear")
-        u = self.calcc2d(a, dd[0], d1, d3d)
+        u = self.calcc2d(self.u_input_data, dd[0], d1, d3d)
 
         return sum(np.sqrt(np.square(np.array(u) - self.y_output_data)))
     
