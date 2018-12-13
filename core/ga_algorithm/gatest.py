@@ -41,7 +41,7 @@ def calcc2d(e, num, den, sampletime):
 def test_algorithm_rga(data_time_step, u_input_data, y_output_data):
     """Real-coded genetic algorithm."""
     fun1 = Genetic(Fitne(data_time_step, u_input_data, y_output_data, upper, lower), {
-        'maxGen': 30, 'report': 10,
+        'maxGen': 20, 'report': 10,
         # Genetic
         'nPop': 100,
         'pCross': 0.95,
@@ -78,7 +78,6 @@ if __name__ == "__main__":
     # print(len(mag))
 
     # simulation input
-
     time_step = np.linspace(0, 1, 101)
     w = sg.chirp(time_step, f0=1, f1=6, t1=10, method='linear')
     num = [80]
@@ -90,9 +89,14 @@ if __name__ == "__main__":
     aa, bb = calcc2d(w.tolist(), dd[0], d1, d3d)
 
     # find model
-    # TODO: need to check why sin can't find the correct model from RGA
     a, b = test_algorithm_rga(len(time_step), w, np.array(bb))
     print(a)
+    # print(b)
+    tt = []
+    outt = []
+    for i in b:
+        tt.append(i[0])
+        outt.append(i[1])
     # tf = sg.TransferFunction([a[0]], [1, a[1]])
     # t, yout = sg.step(tf, T=time_step)
     dd, d1, d3d = sg.cont2discrete(([a[0]], [1, a[1]]), 0.01, method="bilinear")
@@ -101,8 +105,9 @@ if __name__ == "__main__":
 
     dd, d1, d3d = sg.cont2discrete((num, den), 0.01, method="bilinear")
     t, u = calcc2d(w.tolist(), dd[0], d1, d3d)
-    plt.plot(aa, bb, 'r')
-    plt.plot(t, u, 'g')
+    # plt.plot(aa, bb, 'r')
+    # plt.plot(t, u, 'g')
+    plt.plot(tt, outt)
     plt.show()
 
     # a, b = test_algorithm_rga(tfreq_h, mag)
