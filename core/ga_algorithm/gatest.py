@@ -10,8 +10,8 @@ from time import time
 
 
 #block = DialogBlock([1], [1, 1, 2], )
-upper = [1.0, 1.0, 1.0, 1.0, 1.0]
-lower = [-10, 0, 0, 0, 0.0]
+upper = [100.0, 100.0, 100.0, 100.0, 100.0]
+lower = [-100, -100, -100, -100, -100.0]
 
 
 def calcc2d(e, num, den, sampletime):
@@ -40,7 +40,7 @@ def calcc2d(e, num, den, sampletime):
 def test_algorithm_rga(data_time_step, u_input_data, y_output_data):
     """Real-coded genetic algorithm."""
     fun1 = Genetic(Fitne(data_time_step, u_input_data, y_output_data, upper, lower), {
-        'maxGen': 30, 'report': 10,
+        'maxGen': 100, 'report': 10,
         # Genetic
         'nPop': 100,
         'pCross': 0.95,
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     # a = np.ones(len(time_step))
     dd, d1, d3d = sg.cont2discrete((num, den), 0.001, method="bilinear")
     aa, bb = calcc2d(w.tolist(), dd[0], d1, d3d)
-    white_noise_output = (np.array(bb) + white_noise).reshape(len(bb), 1)
+    white_noise_output = (np.array(bb) + white_noise)
 
     # t, u, = sg.dlsim((dd, d1, d3d), w.tolist())
     # plt.plot(t, u)
@@ -87,11 +87,11 @@ if __name__ == "__main__":
     print(a)
     # print(b)
     print(time() - t0)
-
-    dd = [[a[2], a[3], a[4]]]
-    d1 = [1, a[0], a[1]]
-    d3d = 0.001
-    # dd, d1, d3d = sg.cont2discrete(([a[2], a[3]], [1, a[0], a[1]]), 0.001, method="bilinear")
+    #
+    # dd = [[a[2], a[3], a[4]]]
+    # d1 = [1, a[0], a[1]]
+    # d3d = 0.001
+    dd, d1, d3d = sg.cont2discrete(([a[2], a[3]], [1, a[0], a[1]]), 0.001, method="bilinear")
     # t, yout = calcc2d(w.tolist(), dd[0], d1, d3d)
     t, yout = sg.dlsim((dd, d1, d3d), w.tolist())
     plt.plot(aa, white_noise_output, 'r')
