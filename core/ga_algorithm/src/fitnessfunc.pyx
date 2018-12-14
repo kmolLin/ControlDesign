@@ -7,7 +7,7 @@ from scipy.interpolate import interp1d
 from scipy.signal import bode, lti
 import numpy as np
 cimport numpy as np
-from scipy.signal import step, TransferFunction, cont2discrete
+from scipy.signal import step, TransferFunction, cont2discrete, dlsim
 from numpy cimport float64_t, ndarray
 
 
@@ -43,14 +43,14 @@ cdef list calcc2d(
 
 cdef class Fitne(Verification):
 
-    cdef ndarray , u_input_data, lower, upper, y_output_data
+    cdef ndarray , u_input_data, lower, upper, y_output_data, timess
     cdef int data_len
     cdef int data_time_step
     
     def __cinit__(self,
         int data_time_step,
         ndarray[float64_t, ndim=1] u_input_data,
-        ndarray[float64_t, ndim=1] y_output_data,
+        ndarray[float64_t, ndim=2] y_output_data,
         limitup,
         limitlow
     ):
@@ -60,11 +60,12 @@ cdef class Fitne(Verification):
         self.upper = np.array(limitup)
         self.lower = np.array(limitlow)
         self.u_input_data = np.array(u_input_data)
+        self.timess = np.linspace(0, 10, 10001)
         # self.data_len = len(self.freqdata)
         self.y_output_data = y_output_data
 
     cdef int get_nParm(self):
-        return 4
+        return 5
     
     cdef ndarray[float64_t, ndim=1] get_upper(self):
         return self.upper
@@ -75,18 +76,26 @@ cdef class Fitne(Verification):
     cdef double run(self, np.ndarray v):
         cdef np.ndarray dd, d1, a
         cdef long double d3d
-        cdef list u = []
-        u = []
+        cdef np.ndarray u
+        # u = []
 
-        if v[2] == 0 or v[0] == 0:
-            return 999999999
+        # if v[2] == 0 or v[0] == 0:
+        #     return 999999999s
 
-        dd, d1, d3d = cont2discrete(([v[2], v[3]], [1, v[0], v[1]]), 0.001, method="bilinear")
-        u = calcc2d(self.u_input_data, dd[0], d1, d3d)
+        # dd, d1, d3d = cont2discrete(([v[2], v[3]], [1, v[0], v[1]]), 0.001, method="bilinear")
+        dd = np.array([[v[2], v[3], v[4]]])
+        d1 = np.array([1, v[0], v[1]])
+        d3d = 0.001
+        # u = calcc2d(self.u_input_data, dd[0], d1, d3d)
+
+        _ ,u = dlsim((dd, d1, d3d), self.u_input_data, t=self.timess)
+
         # if sum(np.square(np.array(u, dtype=np.double) - self.y_output_data)) == np.inf or np.nan:
         #     return 999999999
-        # print(sum(np.square(np.array(u, dtype=np.double) - self.y_output_data)))
-        return sum(np.square(np.array(u, dtype=np.double) - self.y_output_data))
-    
+        if sum(np.square(u - self.y_output_data))[0] == np.nan:
+            return 99999999
+        else:
+            return sum(np.square(u - self.y_output_data))
+
     cpdef object get_result(self, ndarray[float64_t, ndim=1] v):
         return v

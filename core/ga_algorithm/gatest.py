@@ -10,8 +10,8 @@ from time import time
 
 
 #block = DialogBlock([1], [1, 1, 2], )
-upper = [100.0, 100.0, 100.0, 100.0]
-lower = [-100, -100, -100, -100]
+upper = [1.0, 1.0, 1.0, 1.0, 1.0]
+lower = [-10, 0, 0, 0, 0.0]
 
 
 def calcc2d(e, num, den, sampletime):
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     # simulation input
     time_step = np.linspace(0, 10, 10001)
     w = sg.chirp(time_step, f0=1, f1=6, t1=10, method='linear')
-    white_noise = (np.random.rand(len(time_step)) - 0.5) * 0.2
+    white_noise = (np.random.rand(len(time_step)) - 0.5) * 0.01
     num = [2, 5]
     den = [1, 2, 10]
     tf = sg.TransferFunction(num, den)
@@ -74,8 +74,12 @@ if __name__ == "__main__":
     # a = np.ones(len(time_step))
     dd, d1, d3d = sg.cont2discrete((num, den), 0.001, method="bilinear")
     aa, bb = calcc2d(w.tolist(), dd[0], d1, d3d)
-    white_noise_output = np.array(bb) # + white_noise
+    white_noise_output = (np.array(bb) + white_noise).reshape(len(bb), 1)
 
+    # t, u, = sg.dlsim((dd, d1, d3d), w.tolist())
+    # plt.plot(t, u)
+    # plt.plot(aa, bb)
+    # plt.show()
 
     # find model
     t0 = time()
@@ -84,8 +88,12 @@ if __name__ == "__main__":
     # print(b)
     print(time() - t0)
 
-    dd, d1, d3d = sg.cont2discrete(([a[2], a[3]], [1, a[0], a[1]]), 0.001, method="bilinear")
-    t, yout = calcc2d(w.tolist(), dd[0], d1, d3d)
+    dd = [[a[2], a[3], a[4]]]
+    d1 = [1, a[0], a[1]]
+    d3d = 0.001
+    # dd, d1, d3d = sg.cont2discrete(([a[2], a[3]], [1, a[0], a[1]]), 0.001, method="bilinear")
+    # t, yout = calcc2d(w.tolist(), dd[0], d1, d3d)
+    t, yout = sg.dlsim((dd, d1, d3d), w.tolist())
     plt.plot(aa, white_noise_output, 'r')
     plt.plot(aa, bb, 'b')
     plt.plot(t, yout, 'g')
