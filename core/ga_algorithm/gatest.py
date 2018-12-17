@@ -10,8 +10,8 @@ from time import time
 
 
 #block = DialogBlock([1], [1, 1, 2], )
-upper = [100.0, 100.0, 100.0, 100.0, 100.0]
-lower = [-100, -100, -100, -100, -100.0]
+upper = [100.0, 100.0, 100.0, 100.0, 100.0, 100.0]
+lower = [-100, -100, -100, -100, -100.0, -100.0]
 
 
 def calcc2d(e, num, den, sampletime):
@@ -40,7 +40,9 @@ def calcc2d(e, num, den, sampletime):
 def test_algorithm_rga(data_time_step, u_input_data, y_output_data):
     """Real-coded genetic algorithm."""
     fun1 = Genetic(Fitne(data_time_step, u_input_data, y_output_data, upper, lower), {
-        'maxGen': 100, 'report': 10,
+        # 'maxGen': 200,
+        'report': 10,
+        'minFit': 1,
         # Genetic
         'nPop': 100,
         'pCross': 0.95,
@@ -67,20 +69,19 @@ if __name__ == "__main__":
     time_step = np.linspace(0, 10, 10001)
     w = sg.chirp(time_step, f0=1, f1=6, t1=10, method='linear')
     white_noise = (np.random.rand(len(time_step)) - 0.5) * 0.01
-    num = [2, 5]
-    den = [1, 2, 10]
+    num = [0, 10, 10]
+    den = [1, 2, 5, 10]
     tf = sg.TransferFunction(num, den)
     # aa, bb = sg.step(tf, T=time_step)
     # a = np.ones(len(time_step))
     dd, d1, d3d = sg.cont2discrete((num, den), 0.001, method="bilinear")
     aa, bb = calcc2d(w.tolist(), dd[0], d1, d3d)
     white_noise_output = (np.array(bb) + white_noise)
-
-    # t, u, = sg.dlsim((dd, d1, d3d), w.tolist())
-    # plt.plot(t, u)
-    # plt.plot(aa, bb)
+    # dd, d1, d3d = sg.cont2discrete(([v[3], v[4], v[5]], [1, v[0], v[1], v[2]]), 0.001, method="bilinear")
+    # t, u, = calcc2d(w.tolist(), dd[0], d1, d3d)
+    # plt.plot(t, u, 'r')
+    # plt.plot(aa, bb, 'b')
     # plt.show()
-
     # find model
     t0 = time()
     a, b = test_algorithm_rga(len(time_step), w, white_noise_output)
@@ -91,8 +92,9 @@ if __name__ == "__main__":
     # dd = [[a[2], a[3], a[4]]]
     # d1 = [1, a[0], a[1]]
     # d3d = 0.001
-    dd, d1, d3d = sg.cont2discrete(([a[2], a[3]], [1, a[0], a[1]]), 0.001, method="bilinear")
+    # dd, d1, d3d = sg.cont2discrete(([a[2], a[3]], [1, a[0], a[1]]), 0.001, method="bilinear")
     # t, yout = calcc2d(w.tolist(), dd[0], d1, d3d)
+    dd, d1, d3d = sg.cont2discrete(([a[3], a[4], a[5]], [1, a[0], a[1], a[2]]), 0.001, method="bilinear")
     t, yout = sg.dlsim((dd, d1, d3d), w.tolist())
     plt.plot(aa, white_noise_output, 'r')
     plt.plot(aa, bb, 'b')

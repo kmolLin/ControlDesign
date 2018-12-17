@@ -65,7 +65,7 @@ cdef class Fitne(Verification):
         self.y_output_data = y_output_data
 
     cdef int get_nParm(self):
-        return 4
+        return 6
     
     cdef ndarray[float64_t, ndim=1] get_upper(self):
         return self.upper
@@ -81,8 +81,9 @@ cdef class Fitne(Verification):
 
         # if v[2] == 0 or v[0] == 0:
         #     return 999999999s
-
-        dd, d1, d3d = cont2discrete(([v[2], v[3]], [1, v[0], v[1]]), 0.001, method="bilinear")
+        if v[3] and v[4] and v[5] == 0:
+            return 99999999
+        dd, d1, d3d = cont2discrete(([v[3], v[4], v[5]], [1, v[0], v[1], v[2]]), 0.001, method="bilinear")
         # dd = np.array([[v[2], v[3], v[4]]])
         # d1 = np.array([1, v[0], v[1]])
         # d3d = 0.001
