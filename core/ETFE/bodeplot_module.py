@@ -35,19 +35,30 @@ def bode_plot(omega: List, mag: List, phase: List, control_draw: bool):
     if len(mag) == 1:
         ax_mag.semilogx(omega, mag[0])
     elif len(mag) == 2:
-        ax_mag.semilogx(omega, mag[0])
-        ax_mag.semilogx(omega, mag[1], 'r')
-
+        ax_mag.semilogx(omega, mag[0], label='Genetic Algorithms')
+        ax_mag.semilogx(omega, mag[1], 'r', label='Least squares')
+        ax_mag.legend(loc=3)
+    elif len(mag) == 3:
+        ax_mag.semilogx(omega, mag[0], label='ETFE')
+        ax_mag.semilogx(omega, mag[1], 'r', label='Least squares')
+        ax_mag.semilogx(omega, mag[2], 'g', label='Genetic Algorithms')
+        ax_mag.legend(loc=3)
     ax_mag.grid(True, which='both')
     ax_mag.set_ylabel("Magnitude (dB)")
+    plt.legend(loc = 3)
 
     if len(phase) == 1:
         phase_plot = phase[0]
         ax_phase.semilogx(omega, phase_plot)
 
     elif len(phase) == 2:
+        ax_phase.semilogx(omega, phase[0], label='Genetic Algorithms')
+        ax_phase.semilogx(omega, phase[1], 'r', label='Least squares')
+    elif len(phase) == 3:
         ax_phase.semilogx(omega, phase[0])
         ax_phase.semilogx(omega, phase[1], 'r')
+        ax_phase.semilogx(omega, phase[2], 'g')
+
     ax_phase.set_ylabel("Phase (deg)")
 
     def gen_Zero_Centered_Series(val_min, val_max, period):
