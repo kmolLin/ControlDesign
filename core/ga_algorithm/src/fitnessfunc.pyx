@@ -9,6 +9,7 @@ import numpy as np
 cimport numpy as np
 from scipy.signal import step, TransferFunction, cont2discrete, dlsim
 from numpy cimport float64_t, ndarray
+from libc.math cimport HUGE_VAL
 
 
 cdef list calcc2d(
@@ -65,7 +66,7 @@ cdef class Fitne(Verification):
         self.y_output_data = y_output_data
 
     cdef int get_nParm(self):
-        return 6
+        return 13
     
     cdef ndarray[float64_t, ndim=1] get_upper(self):
         return self.upper
@@ -79,17 +80,21 @@ cdef class Fitne(Verification):
         # cdef np.ndarray u
         u = []
 
-        # if v[2] == 0 or v[0] == 0:
-        #     return 999999999s
-        if v[3] and v[4] and v[5] == 0:
-            return 99999999
-        dd, d1, d3d = cont2discrete(([v[3], v[4], v[5]], [1, v[0], v[1], v[2]]), 0.001, method="bilinear")
-        # dd = np.array([[v[2], v[3], v[4]]])
-        # d1 = np.array([1, v[0], v[1]])
-        # d3d = 0.001
+        # if v[5] and v[6] and v[7] == 0:
+        #     return HUGE_VAL
+        # dd, d1, d3d = cont2discrete((
+        #     [v[5], v[6], v[7], v[8]],
+        # [1, v[0], v[1], v[2], v[3], v[4]]), 0.0005, method="bilinear")
+
+        if v[7] and v[8] and v[9] == 0:
+            return HUGE_VAL
+        dd, d1, d3d = cont2discrete((
+            [v[7], v[8], v[9], v[10], v[11], v[12]],
+        [1, v[0], v[1], v[2], v[3], v[4], v[5], v[6]]), 0.0005, method="bilinear")
+
         u = calcc2d(self.u_input_data, dd[0], d1, d3d)
         if sum(np.square(np.array(u) - self.y_output_data)) == np.nan:
-            return 99999999
+            return HUGE_VAL
         else:
             return sum(np.square(np.array(u) - self.y_output_data))
 
