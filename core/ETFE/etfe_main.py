@@ -4,6 +4,7 @@ from etfe import ETFE, sys_frq_rep
 from time import time
 from comput_module import sysid_invfreqs, phase
 from bodeplot_module import bode_plot
+from leastsquare import leastsquare_system
 from scipy.optimize import curve_fit
 import matplotlib.patches as mpatches
 from scipy import signal
@@ -86,6 +87,7 @@ if __name__ == '__main__':
     # plt.legend(handles=[red_patch])
     # plt.show()
     # num, den, error = sysid_invfreqs(graw, wwt, 12, 13, np.array(wt), 30, 0.0000000001)
+    leastsquare_system(graw, wwt, 3, 5, np.array(wt), 30, 0.0000000001)
     num, den, error = sysid_invfreqs(graw, wwt, 3, 5, np.array(wt), 30, 0.0000000001)
     sys = signal.TransferFunction(num, den)
     with open("../ga_algorithm/Output.txt", 'r') as text_file:
