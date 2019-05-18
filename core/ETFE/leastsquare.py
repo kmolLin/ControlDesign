@@ -4,6 +4,7 @@
 import numpy as np
 from numpy import real
 
+
 def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
                     Na: int, wf: np.ndarray, iter: int, tor: float):
     """
