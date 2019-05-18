@@ -52,10 +52,9 @@ def sysid_invfreqs(g: np.ndarray, w: np.ndarray, Nb: int,
     count = 0
     st = 0.0
     # compute gradient
-    return b, a, error
     D31 = OM[inda, :].T * (-GC / (a.reshape(1, len(a)) @ OM[indg, :]).T * np.ones((1, Na)))
     # TODO : check indb to inda
-    D32 = OM[inda, :].T / ((a.reshape(1, len(a)) @ OM[indg, :]).T @ np.ones((1, Nb)))
+    D32 = OM[indb, :].T / ((a.reshape(1, len(a)) @ OM[indg, :]).T @ np.ones((1, Nb)))
     D3 = np.hstack((D31, D32)) * (w_f.reshape(length_data, 1) @ np.ones((1, Na + Nb)))
     while np.linalg.norm(gndir) > tol and count < maxiter and st != 1:
         count += 1

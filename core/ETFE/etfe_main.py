@@ -87,23 +87,23 @@ if __name__ == '__main__':
     # plt.legend(handles=[red_patch])
     # plt.show()
     # num, den, error = sysid_invfreqs(graw, wwt, 12, 13, np.array(wt), 30, 0.0000000001)
-    leastsquare_system(graw, wwt, 3, 5, np.array(wt), 30, 0.0000000001)
-    num, den, error = sysid_invfreqs(graw, wwt, 3, 5, np.array(wt), 30, 0.0000000001)
+    num, den, error = leastsquare_system(graw, wwt, 5, 7, np.array(wt), 30, 0.0000000001)
+    # num, den, error = sysid_invfreqs(graw, wwt, 5, 7, np.array(wt), 30, 0.0000000001)
     sys = signal.TransferFunction(num, den)
-    with open("../ga_algorithm/Output.txt", 'r') as text_file:
-        a = []
-        for line in text_file:
-            a.append(float(line.rstrip()))
+    # with open("../ga_algorithm/Output.txt", 'r') as text_file:
+    #     a = []
+    #     for line in text_file:
+    #         a.append(float(line.rstrip()))
 
     # a = np.array(tmp[0].split(" ,"))
     # print(a)
     # bb = [float(i) for i in a]
     # a = bb
 
-    nunm = [a[5], a[6], a[7], a[8]]
-    dend = [1, a[0], a[1], a[2], a[3], a[4]]
+    # nunm = [a[5], a[6], a[7], a[8]]
+    # dend = [1, a[0], a[1], a[2], a[3], a[4]]
 
-    sys2 = signal.TransferFunction(nunm, dend)
+    # sys2 = signal.TransferFunction(nunm, dend)
 
     # nunm = [a[7], a[8], a[9], a[10], a[11], a[12]]
     # dend = [1, a[0], a[1], a[2], a[3], a[4], a[5], a[6]]
@@ -111,10 +111,10 @@ if __name__ == '__main__':
     # sys2 = signal.TransferFunction(nunm, dend)
 
     W, H = signal.freqresp(sys, w=tfreq_h)
-    ww, HH = signal.freqresp(sys2, w=tfreq_h)
+    # ww, HH = signal.freqresp(sys2, w=tfreq_h)
 
     mag_t, pha_t = calc_bode_plot(tfreq_h, H)
-    mag_tt, pha_tt = calc_bode_plot(tfreq_h, HH)
+    # mag_tt, pha_tt = calc_bode_plot(tfreq_h, HH)
 
     # mag_t = []
     # pha_t = []
@@ -124,5 +124,5 @@ if __name__ == '__main__':
     print(time() - t0)
     tfreq_h = tfreq_h / (np.pi * 2)
     # w, mag1, phase1 = signal.bode(sys, w=tfreq_h)
-    test = bode_plot(tfreq_h, [mag, mag_t, mag_tt], [pha, pha_t, pha_tt], True)
+    test = bode_plot(tfreq_h, [mag, mag_t], [pha, pha_t], True)
     # test = bode_plot(tfreq_h, [mag_tt, mag_t], [pha_tt, pha_t], True)
