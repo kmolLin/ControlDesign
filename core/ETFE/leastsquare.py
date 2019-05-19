@@ -50,7 +50,7 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
     v[vind] = -v[vind]
     a = np.poly(v)
 
-    # calc the b,a transfer function frequency response
+    # calc the b, a transfer function frequency response
     GC = ((b.reshape((1, len(b))) @ OM[indb, :]) / (a.reshape(1, len(a)) @ OM[indg, :])).T
     e = (GC - g.reshape(length_data, 1)) * w_f.reshape((length_data, 1))
     # calc (GC - e)^2 have error
@@ -61,8 +61,10 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
     Disturbance = 2 * tol + 1
     count = 0
     st = 0.0
+
     # return b, a, error
     # calc jacobain matrix
+
     Jacobain_tmp_A = OM[inda, :].T * (-GC / (a.reshape(1, len(a)) @ OM[indg, :]).T * np.ones((1, Na)))
     Jacobain_tmp_B = OM[indb, :].T / ((a.reshape(1, len(a)) @ OM[indg, :]).T @ np.ones((1, Nb)))
     Jacobain_X = np.hstack((Jacobain_tmp_A, Jacobain_tmp_B)) * (w_f.reshape(length_data, 1) @ np.ones((1, Na + Nb)))
