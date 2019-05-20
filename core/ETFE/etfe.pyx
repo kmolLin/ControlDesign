@@ -96,7 +96,7 @@ cpdef tuple ETFE(list input, double Ts, int N, list output):
 
         ha = np.zeros(M1 + 1, dtype=np.float64)
         for i in range(int(M1) + 1):
-            ha[i] = (0.54 - 0.46 * cos(2 * pi * i / M1))
+            ha[i] = (0.5386 - 0.46164 * cos(2 * pi * i / M1))
 
         ha_norm = Norm(ha)
 
@@ -125,7 +125,8 @@ cpdef tuple ETFE(list input, double Ts, int N, list output):
         cnt = cnt + 1
 
     # results of frequency, magnitude, and phase.
-    cdef double frq_res = pi / (N * Ts)
+    # TODO: cjeck frq_res units (need to * 10 or not)
+    cdef double frq_res = pi / (N * Ts) / 10
     cdef list tfreq = []
     cdef list tfreq_h = []
     cdef list real_value = []
@@ -265,6 +266,4 @@ cpdef tuple sys_frq_rep(double idkvp, list real_sys, list imag_sys,
         retmag[0] = tmag[i]
         retpha[0] = abs(tphase[i] + 180)
     return tmag, tphase, r_sys, i_sys
-
-
 

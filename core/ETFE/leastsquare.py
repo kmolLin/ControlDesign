@@ -64,14 +64,18 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
 
     # return b, a, error
     # calc jacobain matrix
-
-    Jacobain_tmp_A = OM[inda, :].T * (-GC / (a.reshape(1, len(a)) @ OM[indg, :]).T * np.ones((1, Na)))
-    Jacobain_tmp_B = OM[indb, :].T / ((a.reshape(1, len(a)) @ OM[indg, :]).T @ np.ones((1, Nb)))
-    Jacobain_X = np.hstack((Jacobain_tmp_A, Jacobain_tmp_B)) * (w_f.reshape(length_data, 1) @ np.ones((1, Na + Nb)))
+    # print(OM[inda, :][0][:])
+    print(indg)
+    print(OM[inda, :].T.shape)
+    exit()
 
     while np.linalg.norm(Disturbance) > tol and count < iter and st != 1:
         count += 1
-        print(np.linalg.norm(Disturbance))
+        # compute gradiant
+        Jacobain_tmp_A = OM[inda, :].T * (-GC / (a.reshape(1, len(a)) @ OM[indg, :]).T * np.ones((1, Na)))
+        Jacobain_tmp_B = OM[indb, :].T / ((a.reshape(1, len(a)) @ OM[indg, :]).T @ np.ones((1, Nb)))
+        Jacobain_X = np.hstack((Jacobain_tmp_A, Jacobain_tmp_B)) * (w_f.reshape(length_data, 1) @ np.ones((1, Na + Nb)))
+
         # compute Gauss-Newton search direction
         e = (GC - g.reshape(length_data, 1)) * w_f.reshape((length_data, 1))
         R = real(Jacobain_X.conj().T @ Jacobain_X)

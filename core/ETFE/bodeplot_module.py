@@ -7,7 +7,7 @@ from typing import List, Tuple
 __all__ = ['bode_plot']
 
 
-def bode_plot(omega: List, mag: List, phase: List, control_draw: bool):
+def bode_plot(omega: List, mag: List, phase: List, name: List, control_draw: bool):
 
     fig = plt.gcf()
     ax_mag = None
@@ -35,8 +35,8 @@ def bode_plot(omega: List, mag: List, phase: List, control_draw: bool):
     if len(mag) == 1:
         ax_mag.semilogx(omega, mag[0])
     elif len(mag) == 2:
-        ax_mag.semilogx(omega, mag[0], label='Genetic Algorithms')
-        ax_mag.semilogx(omega, mag[1], 'r', label='Least squares')
+        ax_mag.semilogx(omega, mag[0], label=name[0])
+        ax_mag.semilogx(omega, mag[1], 'r', label=name[1])
         ax_mag.legend(loc=3)
     elif len(mag) == 3:
         ax_mag.semilogx(omega, mag[0], label='ETFE')
@@ -45,15 +45,16 @@ def bode_plot(omega: List, mag: List, phase: List, control_draw: bool):
         ax_mag.legend(loc=3)
     ax_mag.grid(True, which='both')
     ax_mag.set_ylabel("Magnitude (dB)")
-    plt.legend(loc = 3)
+    # plt.legend(loc=3)
 
     if len(phase) == 1:
         phase_plot = phase[0]
         ax_phase.semilogx(omega, phase_plot)
 
     elif len(phase) == 2:
-        ax_phase.semilogx(omega, phase[0], label='Genetic Algorithms')
-        ax_phase.semilogx(omega, phase[1], 'r', label='Least squares')
+        ax_phase.semilogx(omega, phase[0], label=name[0])
+        ax_phase.semilogx(omega, phase[1], 'r', label=name[1])
+        ax_phase.legend(loc=3)
     elif len(phase) == 3:
         ax_phase.semilogx(omega, phase[0])
         ax_phase.semilogx(omega, phase[1], 'r')
@@ -74,5 +75,5 @@ def bode_plot(omega: List, mag: List, phase: List, control_draw: bool):
 
     if control_draw:
         plt.show()
-    else:
-        return figure_merge
+    # else:
+    #     return figure_merge
