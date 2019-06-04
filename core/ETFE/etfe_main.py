@@ -33,7 +33,7 @@ def just_fft(sample_time, input, output):
 
 
 if __name__ == '__main__':
-    file = open("chirpOut_Y_R_M.txt", "r")
+    file = open("testcode.txt", "r")
     lines = file.readlines()
     timex = []
     input = []
@@ -76,18 +76,10 @@ if __name__ == '__main__':
     # tfreq_h = omega
     wwt = np.array(tfreq, dtype=np.complex)
 
-    num, den, error = leastsquare_system(graw, wwt, 5, 5, np.array(weight), 30, 0.0000000001)
+    num, den, error = leastsquare_system(graw, wwt, 11, 13, np.array(weight), 30, 0.0000000001)
     # num, den, error = sysid_invfreqs(graw, wwt, 13, 13, np.array(weight), 30, 0.0000000001)
     print(len(num))
     print(len(den))
-
-    # with open("num.txt", "w") as f:
-    #     for i in num:
-    #         f.write(f"{i} ")
-    #
-    # with open("den.txt", "w") as f:
-    #     for i in den:
-    #         f.write(f"{i} ")
 
     sys = signal.TransferFunction(num, den)
 

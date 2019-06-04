@@ -35,9 +35,7 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
 
     Dva = (OM[inda, :]).T * (g.reshape((length_data, 1)) * np.ones((1, Na)))
     Dvb = np.transpose(-(OM[indb, :]))
-    # TODO: ask the w_f using where ?
     ori_A = np.column_stack((Dva, Dvb)) * w_f.reshape((length_data, 1)) * np.ones((1, Na + Nb))
-
     ori_Y = ((-g * np.transpose(OM[Na, :])) * w_f)
     ori_X = np.linalg.solve(real(ori_A.conj().T @ ori_A),  real(ori_A.conj().T @ ori_Y))
 
@@ -57,21 +55,14 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
     Vcap = np.dot(e.conj().transpose(), e)
     error = real(Vcap)
     Matrix_X_ori = np.hstack((a[1: Na + 1], b[int(nk): int(nk + Nb)])).T
-
     Disturbance = 2 * tol + 1
     count = 0
     st = 0.0
 
-    # return b, a, error
-    # calc jacobain matrix
-    # print(OM[inda, :][0][:])
-    print(indg)
-    print(OM[inda, :].T.shape)
-    exit()
-
     while np.linalg.norm(Disturbance) > tol and count < iter and st != 1:
         count += 1
         # compute gradiant
+        # calc jacobain matrix
         Jacobain_tmp_A = OM[inda, :].T * (-GC / (a.reshape(1, len(a)) @ OM[indg, :]).T * np.ones((1, Na)))
         Jacobain_tmp_B = OM[indb, :].T / ((a.reshape(1, len(a)) @ OM[indg, :]).T @ np.ones((1, Nb)))
         Jacobain_X = np.hstack((Jacobain_tmp_A, Jacobain_tmp_B)) * (w_f.reshape(length_data, 1) @ np.ones((1, Na + Nb)))
@@ -87,12 +78,12 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
         matrix_X = Matrix_X_ori
 
         # search along the gndir-direction
+        # do with gauss newton method
         while V1 > Vcap and l1 < 20:
             if l1 == 19:
                 t1 = Matrix_X_ori
             matrix_X = Matrix_X_ori.reshape((Na + Nb, 1)) - k * gndir
-            a = matrix_X[0: Na].T
-            a = np.insert(a, 0, [1])
+            a = np.insert(matrix_X[0: Na].T, 0, [1])
             b = np.transpose(matrix_X[Na: Na + Nb])
             v = np.roots(a)
             vind = np.where(v.real > 0)
@@ -100,9 +91,8 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
             a = np.poly(v)
             matrix_X[0: Na] = a[1: Na + 1].T.reshape((len(a[1: Na + 1].T), 1))
             GC = ((b @ OM[indb, :]) / (a.reshape(1, len(a)) @ OM[indg, :])).T
-            V1 = ((GC - g.reshape(length_data, 1)) *
-                  w_f.reshape((length_data, 1))).conj().T @ ((GC - g.reshape(length_data, 1)) *
-                                                             w_f.reshape((length_data, 1)))
+            V1 = ((GC - g.reshape(length_data, 1)) * w_f.reshape((length_data, 1))).conj().T \
+                    @ ((GC - g.reshape(length_data, 1)) * w_f.reshape((length_data, 1)))
             k = k / 2
             l1 += 1
             if l1 == 10:
