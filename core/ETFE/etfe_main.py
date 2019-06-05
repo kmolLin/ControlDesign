@@ -13,11 +13,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def func(x, a, b, c, d, e, f, g, h, i, j):
-    return (g * x ** 3 + h * x ** 2 + i * x ** 1 + j) /\
-           (a * x ** 5 + b * x ** 4 + c * x ** 3 + d * x ** 2 + e * x ** 1 + f)
-
-
 def calc_bode_plot(tfreq_h, H):
     mag_t = []
     pha_t = []

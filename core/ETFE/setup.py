@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Compile the Cython libraries of Pyslvs."""
+"""Compile the Cython libraries of ControlDesign."""
 
 from distutils.core import setup, Extension
 import os

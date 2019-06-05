@@ -1,4 +1,5 @@
-# test GA 
+# test GA
+# TODO: this method isn't good because time serial data can't fit
 
 from fitnessfunc import Fitne
 from rga import Genetic
@@ -8,8 +9,7 @@ import matplotlib.pyplot as plt
 from de import Differential
 from time import time
 
-
-#block = DialogBlock([1], [1, 1, 2], )
+# block = DialogBlock([1], [1, 1, 2], )
 upper = [100.0, 100.0, 100.0, 100.0, 100.0, 100.0]
 lower = [-100, -100, -100, -100, -100.0, -100.0]
 
@@ -58,9 +58,6 @@ def test_algorithm_rga(data_time_step, u_input_data, y_output_data):
     })
     a, b = fun1.run()
     return a, b
-
-def plot_function(time_step, ):
-    pass
 
 
 if __name__ == "__main__":

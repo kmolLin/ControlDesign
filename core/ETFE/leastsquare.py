@@ -6,13 +6,13 @@ from numpy import real
 
 
 def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
-                    Na: int, wf: np.ndarray, iter: int, tor: float):
+                       Na: int, wf: np.ndarray, max_iter: int, tor: float):
     """
     g is a complex data in frequency domain :param g:
     w is frequency time :param w:
     Nb is num order :param Nb:
     Na is den order :param Na:
-    wf is ??? :param wf:
+    wf is weight of g (important data need to * K):param wf:
     iterations :param iter:
     a smaller number:param tor:
     (num, den, error):return:
@@ -59,7 +59,7 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
     count = 0
     st = 0.0
 
-    while np.linalg.norm(Disturbance) > tol and count < iter and st != 1:
+    while np.linalg.norm(Disturbance) > tol and count < max_iter and st != 1:
         count += 1
         # compute gradiant
         # calc jacobain matrix
