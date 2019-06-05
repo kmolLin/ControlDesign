@@ -4,8 +4,7 @@
 Module implementing FiterDialog.
 """
 
-from core.QtModules import (QDialog, pyqtSlot, QDoubleValidator, 
-)
+from core.QtModules import (QDialog, pyqtSlot, QDoubleValidator, )
 from .widgets.Ui_filter import Ui_Dialog
 from scipy.signal import butter, lfilter, filtfilt
 
@@ -38,16 +37,13 @@ class FiterDialog(QDialog, Ui_Dialog):
             print(len(tabcount))
             for i, value in enumerate(tabcount):
                 self.combodata.insertItem(i, value[0])
-                
-        
-            
+
     def butter_bandpass(self, lowcut, highcut, fs, order=5):
         nyq = 0.5 * fs
         low = lowcut / nyq
         high = highcut / nyq
         b, a = butter(order, [low, high], btype='band')
         return b, a
-
 
     def butter_bandpass_filter(self, data, lowcut, highcut, fs, order=5):
         b, a = self.butter_bandpass(lowcut, highcut, fs, order=order)

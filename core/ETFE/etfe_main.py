@@ -71,9 +71,9 @@ if __name__ == '__main__':
     # tfreq_h = omega
     wwt = np.array(tfreq, dtype=np.complex)
 
-    num, den, error = leastsquare_system(graw, wwt, 11, 13, np.array(weight), 30, 0.0000000001)
+    num, den, error = leastsquare_system(graw, wwt, 11, 12, np.array(weight), 30, 0.0000000001)
     # num, den, error = sysid_invfreqs(graw, wwt, 13, 13, np.array(weight), 30, 0.0000000001)
-    print(len(num))
+    print(len(num[0]))
     print(len(den))
 
     sys = signal.TransferFunction(num, den)

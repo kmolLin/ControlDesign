@@ -55,11 +55,11 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
     Vcap = np.dot(e.conj().transpose(), e)
     error = real(Vcap)
     Matrix_X_ori = np.hstack((a[1: Na + 1], b[int(nk): int(nk + Nb)])).T
-    Disturbance = 2 * tol + 1
+    disturbance = 2 * tol + 1
     count = 0
     st = 0.0
 
-    while np.linalg.norm(Disturbance) > tol and count < max_iter and st != 1:
+    while np.linalg.norm(disturbance) > tol and count < max_iter and st != 1:
         count += 1
         # compute gradiant
         # calc jacobain matrix

@@ -258,13 +258,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             input.append(float(line.split(' ')[1]))
             output.append(float(line.split(' ')[2]))
         # TODO : N = 8 * 1024 ???
-        n = 1024. * 16
+        # n = 1024. * 16
+        n = 20001
         # t_freq_h: units (Hz)
         # t_mag: units (DB)
         # t_phase: units (Deg)
         tfreq, tfreq_h, tmag_sys, tphase, imag_value, real_value = ETFE(input, 0.0005, n, output)
-        mag, phase = sys_frq_rep(0.01, real_value, imag_value, tfreq,
-                               tmag_sys, tphase)
+        mag, phase = sys_frq_rep(0.01, real_value, imag_value, tfreq, tmag_sys, tphase)
 
         figure_merge = bode_plot(tfreq_h, mag, phase, False)
 
