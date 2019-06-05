@@ -1,17 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
+import scipy.signal as sg
 
 
-def notch_filter(mag, pha, freqency):
+def notch_filter(mag, pha, freqency, num, den):
 
-    #           s^2 + fbz*s + fz^2
-    # Fnot = --------------------------
-    #           s^2 + fbn*s + fn^2
-    # 1: fz
-    # 2: Dn = fbn / 2 / fz(fn=fz)
-    # 3: Dz = D * Dn(fbz=2 * Dz * fz)
-    # 4: fn = fbn / 2 / Dn
     mag_tmp = [0]
     pha_tmp = [0]
 
@@ -27,8 +21,9 @@ def notch_filter(mag, pha, freqency):
 
     pcNum = 0
     PcCf = []
-    # TODO: need to check the freqency units (* 10)
-    freqency_t = freqency * 10 / (2 * np.pi)
+    freqency_t = freqency / (2 * np.pi)
+
+    ori_w, ori_h = sg.freqresp(sg.TransferFunction(num, den), w=freqency)
     for i in range(1, len(mag)):
         mag_tmp.append(mag[i] - mag[i - 1])
         pha_tmp.append(pha[i] - pha[i - 1])
@@ -73,6 +68,43 @@ def notch_filter(mag, pha, freqency):
                 if Ndep[NotchNum] + mcdB[j] > 0:
                     Ndep.append(-3 - mcdB[j])
                 k = k + 1
-    print(Ndep)
-    print(Nbw)
-    print(Ncf)
+
+    #           s^2 + fbz*s + fz^2
+    # Fnot = --------------------------
+    #           s^2 + fbn*s + fn^2
+    # 1: fz
+    # 2: Dn = fbn / 2 / fz(fn=fz)
+    # 3: Dz = D * Dn(fbz=2 * Dz * fz)
+    # 4: fn = fbn / 2 / Dn
+    filter_tmp = []
+    for i in range(1, NotchNum + 1):
+        Ndep[i] = 10 ** (Ndep[i] / 20)  # 20log10 inverse
+        fz = Ncf[i]  # Center frequency
+        fbn = Nbw[i]  # Bandwidth
+        fn = fz  # Bandstop natural frequency
+        Dn = fbn / 2.0 / fn  # Denumerator damping, fbn = 2 * Dn * fn
+        Dz = Ndep[i] * Dn  # Numerator damping, Dz = Ndep * Dn, fbz = 2 * Dz * fz
+        fbz = 2 * Dz * fz
+        hnot = sg.TransferFunction([1, fbz, fz ** 2], [1, fbn, fn ** 2])
+        W, Hnot_fr = sg.freqresp(hnot, w=freqency)
+        filter_tmp.append(Hnot_fr)
+    # raw model
+    Gnot = np.array([])
+    for j in range(1, NotchNum):
+        if j == 1:
+            Gnot = filter_tmp[0]
+        else:
+            Gnot = Gnot * filter_tmp[j]
+
+    grawNotch = ori_h * Gnot   # Velocity open-loop tansfer function
+    grawNotch_mag = 20 * np.log10(np.abs(grawNotch))
+    grawNotch_phase = np.angle(grawNotch, deg=True)
+
+    # TODO: Transfer function of first order system model
+    for i in range(20001):
+        if pha[i] > -120 and pha[i + 1] < -120:
+            freq = i + 1
+            break
+
+    return grawNotch, grawNotch_mag, grawNotch_phase, freq
+

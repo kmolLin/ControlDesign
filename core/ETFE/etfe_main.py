@@ -74,14 +74,17 @@ if __name__ == '__main__':
     print(len(den))
 
     sys = signal.TransferFunction(num, den)
-
     W, H = signal.freqresp(sys, w=tfreq)
     # ww, HH = signal.freqresp(sys2, w=tfreq)
-
     mag_t, pha_t = calc_bode_plot(tfreq, H)
-    notch_filter(mag_t, pha_t, np.array(tfreq))
+
+    nots, grawNotch_mag, grawNotch_phase, freq = notch_filter(mag_t, pha_t, np.array(tfreq), num, den)
     print(time() - t0)
     tfreq = wwt / (np.pi * 2)
-    # w, mag1, phase1 = signal.bode(sys, w=tfreq)
-    name = ["Original", "Gauss Newton"]
-    test = bode_plot(wwt, [mag, mag_t], [pha, pha_t], name, True)
+    # num1, den1, error1 = leastsquare_system(test, wwt, 0, 1, np.array(weight), 50, 1e-10)
+    # sys = signal.TransferFunction(num1, den1)
+    # W1, H1 = signal.freqresp(sys, w=tfreq)
+    # # ww, HH = signal.freqresp(sys2, w=tfreq)
+    # mag_t_1, pha_t_1 = calc_bode_plot(tfreq, H1)
+    name = ["Original", "Gauss Newton", "ttt"]
+    test = bode_plot(wwt, [mag, mag_t, grawNotch_mag], [pha, pha_t, grawNotch_phase], name, True)
