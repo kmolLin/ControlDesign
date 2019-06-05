@@ -5,12 +5,10 @@ from time import time
 from comput_module import sysid_invfreqs, phase
 from bodeplot_module import bode_plot
 from leastsquare import leastsquare_system
-from scipy.optimize import curve_fit
-import matplotlib.patches as mpatches
 from scipy import signal
-from numpy import inf
-import matplotlib.pyplot as plt
+from notchfilter import notch_filter
 import numpy as np
+
 
 
 def calc_bode_plot(tfreq_h, H):
@@ -28,7 +26,7 @@ def just_fft(sample_time, input, output):
 
 
 if __name__ == '__main__':
-    file = open("testcode.txt", "r")
+    file = open("chirpOut_Y_R_M.txt", "r")
     lines = file.readlines()
     timex = []
     input = []
@@ -46,7 +44,6 @@ if __name__ == '__main__':
     # t_phase: units (Deg)
     tfreq, tfreq_h, tmag_sys, tphase, imag_value, real_value = \
         ETFE(input, 0.0005, n, output)
-    print(real_value)
     mag, pha, r, i = sys_frq_rep(0.01, real_value, imag_value, tfreq, tmag_sys, tphase)
 
     complex_number = np.zeros(len(imag_value), dtype=complex)
@@ -71,7 +68,7 @@ if __name__ == '__main__':
     # tfreq_h = omega
     wwt = np.array(tfreq, dtype=np.complex)
 
-    num, den, error = leastsquare_system(graw, wwt, 11, 12, np.array(weight), 30, 0.0000000001)
+    num, den, error = leastsquare_system(graw, wwt, 12, 13, np.array(weight), 30, 0.0000000001)
     # num, den, error = sysid_invfreqs(graw, wwt, 13, 13, np.array(weight), 30, 0.0000000001)
     print(len(num[0]))
     print(len(den))
@@ -82,6 +79,7 @@ if __name__ == '__main__':
     # ww, HH = signal.freqresp(sys2, w=tfreq)
 
     mag_t, pha_t = calc_bode_plot(tfreq, H)
+    notch_filter(mag_t, pha_t, np.array(tfreq))
     print(time() - t0)
     tfreq = wwt / (np.pi * 2)
     # w, mag1, phase1 = signal.bode(sys, w=tfreq)
