@@ -32,33 +32,16 @@ def bode_plot(omega: List, mag: List, phase: List, name: List, control_draw: boo
     # Magnitude plot
     # pltline = ax_mag.semilogx(omega, mag)
 
-    if len(mag) == 1:
-        ax_mag.semilogx(omega, mag[0])
-    elif len(mag) == 2:
-        ax_mag.semilogx(omega, mag[0], label=name[0])
-        ax_mag.semilogx(omega, mag[1], 'r', label=name[1])
+    for i, magg in enumerate(mag):
+        ax_mag.semilogx(omega, magg, label=name[i])
         ax_mag.legend(loc=3)
-    elif len(mag) == 3:
-        ax_mag.semilogx(omega, mag[0], label='ETFE')
-        ax_mag.semilogx(omega, mag[1], 'r', label='Least squares')
-        ax_mag.semilogx(omega, mag[2], 'g', label='Genetic Algorithms')
-        ax_mag.legend(loc=3)
+
     ax_mag.grid(True, which='both')
     ax_mag.set_ylabel("Magnitude (dB)")
-    # plt.legend(loc=3)
 
-    if len(phase) == 1:
-        phase_plot = phase[0]
-        ax_phase.semilogx(omega, phase_plot)
-
-    elif len(phase) == 2:
-        ax_phase.semilogx(omega, phase[0], label=name[0])
-        ax_phase.semilogx(omega, phase[1], 'r', label=name[1])
+    for i, pha in enumerate(phase):
+        ax_phase.semilogx(omega, pha, label=name[i])
         ax_phase.legend(loc=3)
-    elif len(phase) == 3:
-        ax_phase.semilogx(omega, phase[0])
-        ax_phase.semilogx(omega, phase[1], 'r')
-        ax_phase.semilogx(omega, phase[2], 'g')
 
     ax_phase.set_ylabel("Phase (deg)")
 
