@@ -83,7 +83,11 @@ if __name__ == '__main__':
     tfreq = wwt / (np.pi * 2)
 
     # tuning second
-    num1, den1, error1 = leastsquare_system(g_with_notch[0:freq], wwt[0:freq], 0, 1, np.array(weight)[0:freq], 50, 1e-10)
+    num1, den1, error1 = leastsquare_system(g_with_notch[0:freq],
+                                            wwt[0:freq], 0, 1,
+                                            np.array(weight)[0:freq],
+                                            50, 1e-10)
+
     sys1 = signal.TransferFunction(num1, den1)
     W1, H1 = signal.freqresp(sys1, w=wwt)
     print(num1, den1)

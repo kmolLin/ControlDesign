@@ -41,7 +41,7 @@ def bode_plot(omega: List, mag: List, phase: List, name: List, control_draw: boo
 
     for i, pha in enumerate(phase):
         ax_phase.semilogx(omega, pha, label=name[i])
-        ax_phase.legend(loc=3)
+        # ax_phase.legend(loc=3)
 
     ax_phase.set_ylabel("Phase (deg)")
 
