@@ -8,7 +8,7 @@ from leastsquare import leastsquare_system
 from scipy import signal
 from notchfilter import notch_filter
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 
 def calc_bode_plot(tfreq_h, H):
@@ -44,6 +44,7 @@ if __name__ == '__main__':
     # t_phase: units (Deg)
     tfreq, tfreq_h, tmag_sys, tphase, imag_value, real_value = \
         ETFE(input, 0.0005, n, output)
+
     mag, pha, r, i = sys_frq_rep(0.01, real_value, imag_value, tfreq, tmag_sys, tphase)
 
     complex_number = np.zeros(len(imag_value), dtype=complex)
@@ -78,7 +79,7 @@ if __name__ == '__main__':
     # ww, HH = signal.freqresp(sys2, w=tfreq)
     mag_t, pha_t = calc_bode_plot(tfreq, H)
 
-    g_with_notch, grawNotch_mag, grawNotch_phase, freq = notch_filter(mag_t, pha_t, np.array(tfreq), num, den)
+    g_with_notch, grawNotch_mag, grawNotch_phase, freq = notch_filter(mag_t, pha_t, wwt, num, den)
     print(time() - t0)
     tfreq = wwt / (np.pi * 2)
 
@@ -87,10 +88,18 @@ if __name__ == '__main__':
                                             wwt[0:freq], 0, 1,
                                             np.array(weight)[0:freq],
                                             50, 1e-10)
-
+    print(num1, den1)
+    # TODO: need to check why second curve fitting is't correct units
     sys1 = signal.TransferFunction(num1, den1)
     W1, H1 = signal.freqresp(sys1, w=wwt)
-    print(num1, den1)
+
+    # s1 = signal.lti(t1, t2)
+    # w, mag, phase = signal.bode(s1)
+    # plt.figure()
+    # plt.semilogx(w, mag)  # Bode magnitude plot
+    # plt.figure()
+    # plt.semilogx(w, phase)  # Bode phase plot
+    # plt.show()
     mag_t_1, pha_t_1 = calc_bode_plot(wwt, H1)
     name = ["Original", "Gauss Newton", "Gauss with auto Notch", "First-order system"]
     test = bode_plot(wwt, [mag, mag_t, grawNotch_mag, mag_t_1], [pha, pha_t, grawNotch_phase, pha_t_1], name, True)
