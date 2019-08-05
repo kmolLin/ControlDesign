@@ -1,8 +1,8 @@
 # test GA
 # TODO: this method isn't good because time serial data can't fit
 
-from fitnessfunc import Fitne
-from rga import Genetic
+from ..ga_algorithm.fitnessfunc import Fitne
+from ..ga_algorithm.rga import Genetic
 import numpy as np
 
 # block = DialogBlock([1], [1, 1, 2], )

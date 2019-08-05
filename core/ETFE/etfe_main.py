@@ -70,7 +70,7 @@ if __name__ == '__main__':
     wwt = np.array(tfreq, dtype=np.complex)
 
     # leastsquare_system(method=0(Gauss-Newton algorithm), method=1(genetic algorithm))
-    num, den, error = leastsquare_system(graw, wwt, 12, 13, np.array(weight), 30, 0.0000000001, 0)
+    num, den, error = leastsquare_system(graw, wwt, 12, 13, np.array(weight), 30, 0.0000000001, 1)
     # num, den, error = sysid_invfreqs(graw, wwt, 13, 13, np.array(weight), 30, 0.0000000001)
     print(len(num[0]))
     print(len(den))

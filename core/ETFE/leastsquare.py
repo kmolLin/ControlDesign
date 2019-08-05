@@ -3,6 +3,7 @@
 
 import numpy as np
 from numpy import real
+from ..ga_algorithm.gatest import test_algorithm_rga
 
 
 def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
@@ -63,6 +64,9 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
 
     # check the algorithm (default is Gauss-Newton)
     if method == 1:
+        a, b = test_algorithm_rga(1000, a, b, g, OM, indb, indg, w_f)
+        print("sss")
+        print(a, b)
         exit()
     else:
         while np.linalg.norm(disturbance) > tol and count < max_iter and st != 1:
