@@ -37,9 +37,13 @@ def calcc2d(e, num, den, sampletime):
     return t, u
 
 
-def test_algorithm_rga(data_time_step, u_input_data, y_output_data):
+def test_algorithm_rga(step, a, b, orignal_g, OM, indb, indg):
     """Real-coded genetic algorithm."""
-    fun1 = Genetic(Fitne(data_time_step, u_input_data, y_output_data, upper, lower), {
+    distance = 10000
+    tmp_a = np.delete(a, 0)
+    tmp_array = np.append(tmp_a, b)
+    fun1 = Genetic(Fitne(step, tmp_a, b, orignal_g, tmp_array + distance,
+                         tmp_array - distance, OM, indb, indg), {
         # 'maxGen': 200,
         'report': 10,
         'minFit': 1,
@@ -61,6 +65,13 @@ def test_algorithm_rga(data_time_step, u_input_data, y_output_data):
 
 
 if __name__ == "__main__":
+
+    # TODO: add the new fitnessfunc
+    step = 1000
+    test_algorithm_rga(step, a, b, orignal_g)
+
+
+
 
     # simulation input
     time_step = np.linspace(0, 10, 10001)

@@ -69,7 +69,8 @@ if __name__ == '__main__':
     # tfreq_h = omega
     wwt = np.array(tfreq, dtype=np.complex)
 
-    num, den, error = leastsquare_system(graw, wwt, 12, 13, np.array(weight), 30, 0.0000000001)
+    # leastsquare_system(method=0(Gauss-Newton algorithm), method=1(genetic algorithm))
+    num, den, error = leastsquare_system(graw, wwt, 12, 13, np.array(weight), 30, 0.0000000001, 0)
     # num, den, error = sysid_invfreqs(graw, wwt, 13, 13, np.array(weight), 30, 0.0000000001)
     print(len(num[0]))
     print(len(den))
@@ -87,7 +88,7 @@ if __name__ == '__main__':
     num1, den1, error1 = leastsquare_system(g_with_notch[0:freq],
                                             wwt[0:freq], 0, 1,
                                             np.array(weight)[0:freq],
-                                            50, 1e-10)
+                                            50, 1e-10, 0)
     print(num1, den1)
     # TODO: need to check why second curve fitting is't correct units
     sys1 = signal.TransferFunction(num1, den1)
