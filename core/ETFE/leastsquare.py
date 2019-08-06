@@ -75,8 +75,6 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
         # calc (GC - e)^2 have error
         Vcap = np.dot(e.conj().transpose(), e)
         error = real(Vcap)
-        print(error)
-        print(his_v)
     else:
         while np.linalg.norm(disturbance) > tol and count < max_iter and st != 1:
             count += 1
@@ -122,6 +120,8 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
             Matrix_X_ori = matrix_X
             Vcap = V1
             error = V1
+    print("this is error")
+    print(error)
     return b, a, error
 
 
