@@ -39,7 +39,7 @@ def test_algorithm_rga(step, a, b, orignal_g, OM, indb, indg, w_f):
     tmp_array = np.append(tmp_a, b)
     fun1 = Genetic(Fitne(step, tmp_a, b, orignal_g, tmp_array + distance,
                          tmp_array - distance, OM, indb, indg, w_f), {
-        'max_gen': 10,
+        'max_gen': 2,
         'report': 1,
         # 'min_fit': 1,
         # 'max_time': 3,

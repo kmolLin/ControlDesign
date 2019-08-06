@@ -62,8 +62,6 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
     disturbance = 2 * tol + 1
     count = 0
     st = 0.0
-    print(error)
-    print("after")
 
     # check the algorithm (default is Gauss-Newton)
     if method == 1:
@@ -120,8 +118,6 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
             Matrix_X_ori = matrix_X
             Vcap = V1
             error = V1
-    print("this is error")
-    print(error)
     return b, a, error
 
 

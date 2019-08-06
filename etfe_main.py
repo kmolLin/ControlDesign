@@ -74,7 +74,6 @@ if __name__ == '__main__':
 
     sys = signal.TransferFunction(num, den)
     W, H = signal.freqresp(sys, w=tfreq)
-    # ww, HH = signal.freqresp(sys2, w=tfreq)
     mag_t, pha_t = calc_bode_plot(tfreq, H)
 
     g_with_notch, grawNotch_mag, grawNotch_phase, freq = notch_filter(mag_t, pha_t, wwt, num, den)
@@ -91,13 +90,6 @@ if __name__ == '__main__':
     sys1 = signal.TransferFunction(num1, den1)
     W1, H1 = signal.freqresp(sys1, w=wwt)
 
-    # s1 = signal.lti(t1, t2)
-    # w, mag, phase = signal.bode(s1)
-    # plt.figure()
-    # plt.semilogx(w, mag)  # Bode magnitude plot
-    # plt.figure()
-    # plt.semilogx(w, phase)  # Bode phase plot
-    # plt.show()
     mag_t_1, pha_t_1 = calc_bode_plot(wwt, H1)
     name = ["Original", "Gauss Newton", "Gauss with auto Notch", "First-order system"]
     test = bode_plot(wwt, [mag, mag_t, grawNotch_mag, mag_t_1], [pha, pha_t, grawNotch_phase, pha_t_1], name, True)
