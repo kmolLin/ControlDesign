@@ -34,12 +34,12 @@ def calcc2d(e, num, den, sampletime):
 
 def test_algorithm_rga(step, a, b, orignal_g, OM, indb, indg, w_f):
     """Real-coded genetic algorithm."""
-    distance = 1e-10
+    distance = 1e-5
     tmp_a = np.delete(a, 0)
     tmp_array = np.append(tmp_a, b)
     fun1 = Genetic(Fitne(step, tmp_a, b, orignal_g, tmp_array + distance,
                          tmp_array - distance, OM, indb, indg, w_f), {
-        'maxGen': 200,
+        'maxGen': 50,
         'report': 10,
         # 'minFit': 1,
         # Genetic

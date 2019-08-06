@@ -46,7 +46,7 @@ cdef class Fitne(Verification):
         y_output_data, timess, allparameter, orignal_g, \
         OM, indb, indg, w_f
     cdef int data_len, tmp_a_len, blen
-    cdef int data_time_step
+    cdef int data_time_step, lendata
     
     def __cinit__(self,
         int data_time_step,
@@ -58,7 +58,7 @@ cdef class Fitne(Verification):
         OM,
         indb,
         indg,
-        w_f
+        w_f,
     ):
         # kp/(1,1,2+kp)
         # self.block = block
@@ -73,6 +73,7 @@ cdef class Fitne(Verification):
         self.indb = indb
         self.indg = indg
         self.w_f = w_f
+        self.lendata = len(orignal_g)
 
         self.timess = np.linspace(0, 10, 10001)
         # self.data_len = len(self.freqdata)
@@ -91,14 +92,12 @@ cdef class Fitne(Verification):
         cdef np.ndarray dd, d1, a, b
         cdef long double d3d, tt
         cdef long complex gc
-        cdef int length_data
 
-        length_data = len(self.orignal_g)
         a, b = np.split(v, [self.tmp_a_len])
         a = np.insert(a, 0, [1])
         GC = ((b.reshape((1, len(b))) @ self.OM[self.indb, :]) /
               (a.reshape(1, len(a)) @ self.OM[self.indg, :])).T
-        e = (GC - self.orignal_g.reshape(length_data, 1)) * self.w_f.reshape((length_data, 1))
+        e = (GC - self.orignal_g.reshape(self.lendata, 1)) * self.w_f.reshape((self.lendata, 1))
         Vcap = np.dot(e.conj().transpose(), e)
         return np.real(Vcap)
 
