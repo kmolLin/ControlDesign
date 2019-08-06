@@ -5,10 +5,7 @@
 from verify cimport Verification
 import numpy as np
 cimport numpy as np
-from scipy.signal import step, TransferFunction, cont2discrete, dlsim
 from numpy cimport float64_t, ndarray
-from libc.math cimport HUGE_VAL
-
 
 cdef list calcc2d(
     ndarray[float64_t, ndim=1] e,
