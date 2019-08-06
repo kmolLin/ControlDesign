@@ -88,10 +88,10 @@ cdef class Fitne(Verification):
         return self.lower
     
     cdef double run(self, np.ndarray v):
-        cdef np.ndarray dd, d1, a
+        cdef np.ndarray dd, d1, a, b
         cdef long double d3d, tt
         cdef long complex gc
-        cdef length_data
+        cdef int length_data
 
         length_data = len(self.orignal_g)
         a, b = np.split(v, [self.tmp_a_len])

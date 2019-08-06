@@ -1,8 +1,9 @@
 # test GA
 # TODO: this method isn't good because time serial data can't fit
 
-from fitnessfunc import Fitne
-from rga import Genetic
+from .verify import Verification
+from .fitnessfunc import Fitne
+from .rga import Genetic
 import numpy as np
 
 # block = DialogBlock([1], [1, 1, 2], )
@@ -33,12 +34,12 @@ def calcc2d(e, num, den, sampletime):
 
 def test_algorithm_rga(step, a, b, orignal_g, OM, indb, indg, w_f):
     """Real-coded genetic algorithm."""
-    distance = 10000
+    distance = 1e-10
     tmp_a = np.delete(a, 0)
     tmp_array = np.append(tmp_a, b)
     fun1 = Genetic(Fitne(step, tmp_a, b, orignal_g, tmp_array + distance,
                          tmp_array - distance, OM, indb, indg, w_f), {
-        'maxGen': 20,
+        'maxGen': 200,
         'report': 10,
         # 'minFit': 1,
         # Genetic

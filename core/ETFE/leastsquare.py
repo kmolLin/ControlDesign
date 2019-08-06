@@ -4,7 +4,7 @@
 import numpy as np
 from numpy import real
 # TODO: need to check question why can't import
-from ..ga_algorithm.gatest import test_algorithm_rga
+from core.ga_algorithm import test_algorithm_rga
 
 
 def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
@@ -62,13 +62,20 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
     disturbance = 2 * tol + 1
     count = 0
     st = 0.0
+    print(error)
+    print("after")
 
     # check the algorithm (default is Gauss-Newton)
     if method == 1:
-        a, b = test_algorithm_rga(1000, a, b, g, OM, indb, indg, w_f)
-        print("sss")
-        print(a, b)
-        exit()
+        para_v, his_v = test_algorithm_rga(1000, a, b, g, OM, indb, indg, w_f)
+        a, b = np.split(para_v, [13])
+        a = np.insert(a, 0, [1])
+        GC = ((b.reshape((1, len(b))) @ OM[indb, :]) / (a.reshape(1, len(a)) @ OM[indg, :])).T
+        e = (GC - g.reshape(length_data, 1)) * w_f.reshape((length_data, 1))
+        # calc (GC - e)^2 have error
+        Vcap = np.dot(e.conj().transpose(), e)
+        error = real(Vcap)
+        print(error)
     else:
         while np.linalg.norm(disturbance) > tol and count < max_iter and st != 1:
             count += 1
