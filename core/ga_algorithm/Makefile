@@ -1,7 +1,7 @@
 all: build
 
 # into package folder
-build: src/*.pyx
+build:
 ifeq ($(OS),Windows_NT)
 	-rename __init__.py .__init__.py
 	python setup.py build_ext --inplace

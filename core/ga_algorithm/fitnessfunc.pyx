@@ -2,10 +2,11 @@
 # cython: language_level=3
 # fitness fuc
 
-from verify cimport Verification
+from Adesign.verify cimport Verification
 import numpy as np
 cimport numpy as np
 from numpy cimport float64_t, ndarray
+
 
 cdef list calcc2d(
     ndarray[float64_t, ndim=1] e,

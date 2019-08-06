@@ -1,9 +1,9 @@
 # test GA
 # TODO: this method isn't good because time serial data can't fit
 
-from .verify import Verification
+from .Adesign.verify import Verification
 from .fitnessfunc import Fitne
-from .rga import Genetic
+from .Adesign.rga import Genetic
 import numpy as np
 
 # block = DialogBlock([1], [1, 1, 2], )
