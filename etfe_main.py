@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from etfe import ETFE, sys_frq_rep
+from core.ETFE.etfe import ETFE, sys_frq_rep
 from time import time
-from comput_module import sysid_invfreqs, phase
-from bodeplot_module import bode_plot
-from leastsquare import leastsquare_system
+from core.ETFE.comput_module import sysid_invfreqs, phase
+from core.ETFE.bodeplot_module import bode_plot
+from core.ETFE.leastsquare import leastsquare_system
 from scipy import signal
-from notchfilter import notch_filter
+from core.ETFE.notchfilter import notch_filter
 import numpy as np
 import matplotlib.pyplot as plt
 

@@ -76,6 +76,7 @@ def leastsquare_system(g: np.ndarray, w: np.ndarray, Nb: int,
         Vcap = np.dot(e.conj().transpose(), e)
         error = real(Vcap)
         print(error)
+        print(his_v)
     else:
         while np.linalg.norm(disturbance) > tol and count < max_iter and st != 1:
             count += 1

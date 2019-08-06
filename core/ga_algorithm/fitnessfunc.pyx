@@ -2,7 +2,7 @@
 # cython: language_level=3
 # fitness fuc
 
-from Adesign.verify cimport Verification
+from .Adesign.verify cimport Verification
 import numpy as np
 cimport numpy as np
 from numpy cimport float64_t, ndarray
@@ -86,7 +86,7 @@ cdef class Fitne(Verification):
     cdef ndarray[float64_t, ndim=1] get_lower(self):
         return self.lower
     
-    cdef double run(self, np.ndarray v):
+    cdef double fitness(self, np.ndarray v):
         cdef np.ndarray dd, d1, a, b
         cdef long double d3d, tt
         cdef long complex gc
@@ -99,5 +99,5 @@ cdef class Fitne(Verification):
         Vcap = np.dot(e.conj().transpose(), e)
         return np.real(Vcap)
 
-    cpdef object get_result(self, ndarray[float64_t, ndim=1] v):
+    cpdef object result(self, ndarray[float64_t, ndim=1] v):
         return v

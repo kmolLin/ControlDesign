@@ -9,9 +9,10 @@ from Cython.Distutils import build_ext
 import numpy
 
 sources = []
-pwd = "./"
-adesign = "./Adesign/"
-for folder in (pwd, adesign):
+etfe = "core/ETFE/"
+ga = "core/ga_algorithm/"
+adesign = ga + "Adesign/"
+for folder in (etfe, ga, adesign):
     for source in os.listdir(folder):
         if source.split('.')[-1] == 'pyx':
             sources.append(folder + source)

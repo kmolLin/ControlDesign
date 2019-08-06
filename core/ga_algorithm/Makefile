@@ -17,12 +17,12 @@ ifeq ($(OS),Windows_NT)
 	-rename .__init__.py __init__.py
 	-del *.pyd /q
 	-rd build /s /q
-	-del src\*.c /q
-	-del src\*.cpp /q
+	-del Adesign\*.c /q
+	-del Adesign\*.cpp /q
 else
 	-mv .__init__.py __init__.py
-	-rm -f *.so
+	-find . -name '*.so' -delete
+	-find . -name '*.c' -delete
+	-find . -name '*.cpp' -delete
 	-rm -fr build
-	-rm -f src/*.c
-	-rm -f src/*.cpp
 endif

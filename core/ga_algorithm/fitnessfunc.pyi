@@ -8,6 +8,6 @@ class Fitne(Verification):
     ):
         ...
 
-    def get_result(self, v):
+    def result(self, v):
         ...
 
