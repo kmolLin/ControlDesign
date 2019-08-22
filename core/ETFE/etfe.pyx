@@ -126,7 +126,7 @@ cpdef tuple ETFE(list input, double Ts, int N, list output):
 
     # results of frequency, magnitude, and phase.
     # TODO: cjeck frq_res units (need to * 10 or not)
-    cdef double frq_res = pi / (N * Ts) / 1
+    cdef double frq_res = pi / (N * Ts)
     cdef list tfreq = []
     cdef list tfreq_h = []
     cdef list real_value = []

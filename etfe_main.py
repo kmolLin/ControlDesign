@@ -26,7 +26,7 @@ def just_fft(sample_time, input, output):
 
 
 if __name__ == '__main__':
-    file = open("chirpOut_Y_R_M.txt", "r")
+    file = open("testcode.txt", "r")
     lines = file.readlines()
     timex = []
     input = []
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     # t_mag: units (DB)
     # t_phase: units (Deg)
     tfreq, tfreq_h, tmag_sys, tphase, imag_value, real_value = \
-        ETFE(input, 0.0005, n, output)
+        ETFE(input, 0.005, n, output)
 
     mag, pha, r, i = sys_frq_rep(0.01, real_value, imag_value, tfreq, tmag_sys, tphase)
 
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     wwt = np.array(tfreq, dtype=np.complex)
 
     # leastsquare_system(method=0(Gauss-Newton algorithm), method=1(genetic algorithm))
-    num, den, error = leastsquare_system(graw, wwt, 12, 13, np.array(weight), 30, 0.0000000001, 1)
+    num, den, error = leastsquare_system(graw, wwt, 12, 13, np.array(weight), 30, 0.0000000001, 2)
 
     sys = signal.TransferFunction(num, den)
     W, H = signal.freqresp(sys, w=tfreq)
